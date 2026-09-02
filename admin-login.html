@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MountPeak Group | Admin Login</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .login-box {
+      width: min(420px, calc(100% - 40px));
+      padding: 35px;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 15px 45px rgba(0,0,0,.12);
+    }
+
+    .login-box h1 {
+      margin-bottom: 8px;
+    }
+
+    .login-box p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .login-box label {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 7px;
+      font-weight: 600;
+    }
+
+    .login-box input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+
+    .login-box button {
+      width: 100%;
+      margin-top: 25px;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+<main class="login-box">
+  <p class="eyebrow">MOUNTPEAK GROUP</p>
+
+  <h1>Admin Login</h1>
+
+  <p>
+    Authorized personnel only. Please sign in to access the
+    MountPeak Group administration dashboard.
+  </p>
+
+  <form id="loginForm">
+
+    <label for="email">Email Address</label>
+    <input
+      id="email"
+      type="email"
+      placeholder="Admin email"
+      required
+    >
+
+    <label for="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+      required
+    >
+
+    <button class="btn navy" type="submit">
+      Sign In
+    </button>
+
+    <div id="message"></div>
+
+  </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://yuarhxkntaojgkecwprp.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WVtRsGn1bzVBRdKi8u3_Tg__ga54oRd";
+
+const { createClient } = supabase;
+
+const db = createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+const form = document.getElementById("loginForm");
+const message = document.getElementById("message");
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  message.textContent = "Signing in...";
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    message.textContent = "Invalid email or password.";
+    return;
+  }
+
+  const { data: admin, error: adminError } = await db
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", data.user.id)
+    .maybeSingle();
+
+  if (adminError || !admin) {
+    await db.auth.signOut();
+    message.textContent = "Access denied. Admin account required.";
+    return;
+  }
+
+  window.location.href = "admin.html";
+});
+</script>
+
+</body>
+</html>
