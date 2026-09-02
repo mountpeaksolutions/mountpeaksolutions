@@ -131,6 +131,7 @@ form.addEventListener("submit", async (event) => {
     email,
     password
   });
+  alert("Supabase response received");
 
   if (error) {
     message.textContent = "Invalid email or password.";
