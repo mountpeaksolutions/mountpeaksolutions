@@ -1,1 +1,32 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MountPeak Group Admin</title><link rel="stylesheet" href="style.css"></head><body><main class="section"><p class="eyebrow">MOUNTPEAK GROUP</p><h1 style="font-family:Manrope">Admin Dashboard</h1><p style="color:var(--muted);max-width:650px;line-height:1.7">This frontend dashboard is a visual/admin shell. Candidate submissions and payment transaction records will be populated from the backend once it is deployed.</p><div class="cards" style="margin-top:30px"><article><b>CANDIDATES</b><h3>Awaiting backend</h3><p>Candidate records will appear here after database integration.</p></article><article><b>PAYMENTS</b><h3>Awaiting gateway</h3><p>Successful transactions and payment status will appear here after gateway integration.</p></article><article><b>CONTACTS</b><h3>Awaiting backend</h3><p>Contact enquiries will be listed here after backend connection.</p></article></div><a class="btn navy" style="margin-top:25px" href="index.html">← Back to MountPeak Group</a></main></body></html>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MountPeak Group Admin</title><link rel="stylesheet" href="style.css"></head><body><main class="section"><p class="eyebrow">MOUNTPEAK GROUP</p><h1 style="font-family:Manrope">Admin Dashboard</h1><p style="color:var(--muted);max-width:650px;line-height:1.7">This frontend dashboard is a visual/admin shell. Candidate submissions and payment transaction records will be populated from the backend once it is deployed.</p><div class="cards" style="margin-top:30px"><article><b>CANDIDATES</b><h3>Awaiting backend</h3><p>Candidate records will appear here after database integration.</p></article><article><b>PAYMENTS</b><h3>Awaiting gateway</h3><p>Successful transactions and payment status will appear here after gateway integration.</p></article><article><b>CONTACTS</b><h3>Awaiting backend</h3><p>Contact enquiries will be listed here after backend connection.</p></article></div><a class="btn navy" style="margin-top:25px" href="index.html">← Back to MountPeak Group</a></main><!-- Supabase Admin Security -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://yuarhxkntaojgkecwprp.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WVtRsGn1bzVBRdKi8u3_Tg__ga54oRd";
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+(async () => {
+  const {
+    data: { session }
+  } = await db.auth.getSession();
+
+  if (!session) {
+    window.location.href = "admin-login.html";
+    return;
+  }
+
+  const { data: admin, error } = await db
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", session.user.id)
+    .maybeSingle();
+
+  if (error || !admin) {
+    await db.auth.signOut();
+    window.location.href = "admin-login.html";
+  }
+})();
+</script></body></html>
