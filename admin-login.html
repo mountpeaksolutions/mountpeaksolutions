@@ -146,13 +146,19 @@ form.addEventListener("submit", async (event) => {
     .eq("user_id", data.user.id)
     .maybeSingle();
 
-  if (adminError || !admin) {
-    await db.auth.signOut();
-    message.textContent = "Access denied. Admin account required.";
-    return;
-  }
+  if (adminError) {
+  alert("Admin check error: " + adminError.message);
+  message.textContent = "Admin check error";
+  return;
+}
 
-  window.location.href = "admin.html";
+if (!admin) {
+  alert("Admin record not found");
+  message.textContent = "Admin account required";
+  return;
+}
+
+window.location.href = "admin.html";
 });
 </script>
 
