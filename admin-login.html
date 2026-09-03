@@ -107,6 +107,11 @@
 const SUPABASE_URL = "https://yuarhxkntaojgkecwprp.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WVtRsGn1bzVBRdKi8u3_Tg__ga54oRd";
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://yuarhxkntaojgkecwprp.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "APNI_WALI_PUBLISHABLE_KEY_YAHAN_RAKHO";
 
 const { createClient } = supabase;
 
@@ -122,45 +127,66 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   message.textContent = "Signing in...";
-  alert("Login button working");
 
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
-  const { data, error } = await db.auth.signInWithPassword({
-    email,
-    password
-  });
-  alert("Supabase response received");
-  alert("Logged-in UUID: " + data.user.id);
-  alert("Admin check: " + JSON.stringify(admin) + " | Error: " + JSON.stringify(adminError));
+  try {
+    const result = await Promise.race([
+      db.auth.signInWithPassword({
+        email: email,
+        password: password
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Login request timed out")), 10000)
+      )
+    ]);
 
-  if (error) {
-    message.textContent = "Invalid email or password.";
-    return;
+    const { data, error } = result;
+
+    if (error) {
+      message.textContent = "Login error: " + error.message;
+      return;
+    }
+
+    if (!data || !data.user) {
+      message.textContent = "Login failed: no user returned.";
+      return;
+    }
+
+    const adminResult = await Promise.race([
+      db
+        .from("admin_users")
+        .select("user_id")
+        .eq("user_id", data.user.id)
+        .maybeSingle(),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Admin check timed out")), 10000)
+      )
+    ]);
+
+    const { data: admin, error: adminError } = adminResult;
+
+    if (adminError) {
+      message.textContent = "Admin check error: " + adminError.message;
+      return;
+    }
+
+    if (!admin) {
+      message.textContent = "Admin record not found.";
+      return;
+    }
+
+    message.textContent = "Login successful. Opening dashboard...";
+
+    window.location.href = "admin.html";
+
+  } catch (err) {
+    message.textContent = "Error: " + err.message;
   }
-
-  const { data: admin, error: adminError } = await db
-    .from("admin_users")
-    .select("user_id")
-    .eq("user_id", data.user.id)
-    .maybeSingle();
-
-  if (adminError) {
-  alert("Admin check error: " + adminError.message);
-  message.textContent = "Admin check error";
-  return;
-}
-
-if (!admin) {
-  alert("Admin record not found");
-  message.textContent = "Admin account required";
-  return;
-}
-
-window.location.href = "admin.html";
 });
 </script>
+
 
 </body>
 </html>
