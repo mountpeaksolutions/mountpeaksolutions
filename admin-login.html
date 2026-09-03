@@ -132,6 +132,7 @@ form.addEventListener("submit", async (event) => {
     password
   });
   alert("Supabase response received");
+  alert("Logged-in UUID: " + data.user.id);
 
   if (error) {
     message.textContent = "Invalid email or password.";
