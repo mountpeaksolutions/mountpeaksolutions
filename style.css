@@ -239,3 +239,57 @@
     transition-duration:.01ms !important;
   }
 }
+/* ===== SCROLL REVEAL EFFECT ===== */
+
+.mp-reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:
+    opacity .7s ease var(--mp-delay),
+    transform .7s cubic-bezier(.2,.8,.2,1) var(--mp-delay);
+}
+
+.mp-reveal.mp-visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Staggered card glow */
+.mp-reveal.mp-visible{
+  animation:mpSoftGlow 1.2s ease both;
+  animation-delay:var(--mp-delay);
+}
+
+@keyframes mpSoftGlow{
+  0%{
+    box-shadow:0 0 0 transparent;
+  }
+  50%{
+    box-shadow:0 0 22px #a86ed018;
+  }
+  100%{
+    box-shadow:0 0 0 transparent;
+  }
+}
+
+/* AI buttons click effect */
+.mp-ai-click{
+  animation:mpAIClick .45s ease both !important;
+}
+
+@keyframes mpAIClick{
+  0%{transform:scale(1)}
+  45%{transform:scale(.88) rotate(-8deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+
+/* Button press */
+.mp-button-click{
+  animation:mpButtonClick .25s ease both;
+}
+
+@keyframes mpButtonClick{
+  50%{
+    transform:scale(.96);
+  }
+}
