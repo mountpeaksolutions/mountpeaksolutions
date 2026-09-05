@@ -306,3 +306,20 @@
 .flag{
   display:none;
 }
+/* ===== MOUNTPeak REAL MOUNTAIN HERO ===== */
+
+.hero-art .mountains,
+.hero-art .mountains::before,
+.hero-art .mountains::after,
+.hero-art .mountains i,
+.hero-art .mountains b,
+.hero-art .mountains strong,
+.hero-art .flag {
+  display: none !important;
+}
+
+.hero-art {
+  background:
+    linear-gradient(90deg, rgba(8,5,13,.10), rgba(8,5,13,0)),
+    url('mountpeak-mountain-hero.jpg') center center / cover no-repeat !important;
+}
