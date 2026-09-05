@@ -323,22 +323,16 @@
     linear-gradient(90deg, rgba(8,5,13,.10), rgba(8,5,13,0)),
     url('mountpeak-mountain-hero.jpg') center center / cover no-repeat !important;
 }
-/* ===== MOUNTAIN HERO IMAGE FIX ===== */
-
+/* ===== REAL MOUNTAIN HERO ===== */
 .hero-art{
-  background:
-    linear-gradient(90deg,rgba(8,5,13,.12),rgba(8,5,13,0)),
-    url('mountpeak-mountain-hero.jpg') center right / cover no-repeat !important;
+  background-image:url('/mountpeaksolutions/IMG_0113.jpeg') !important;
+  background-position:center right !important;
+  background-size:cover !important;
+  background-repeat:no-repeat !important;
 }
 
-.hero-art .mountains{
-  display:none !important;
-}
-
-.hero-art .flag{
-  display:none !important;
-}
-
+.hero-art .mountains,
+.hero-art .flag,
 .hero-art .sun{
   display:none !important;
 }
