@@ -323,16 +323,158 @@
     linear-gradient(90deg, rgba(8,5,13,.10), rgba(8,5,13,0)),
     url('mountpeak-mountain-hero.jpg') center center / cover no-repeat !important;
 }
-/* ===== REAL MOUNTAIN HERO ===== */
+/* ===== MOUNTAIN HERO — CINEMATIC MOTION ===== */
+
 .hero-art{
-  background-image:url('/mountpeaksolutions/IMG_0113.jpeg') !important;
-  background-position:center right !important;
+  position:relative !important;
+  overflow:hidden !important;
+  min-height:620px !important;
+
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(8,5,13,.08),
+      rgba(8,5,13,0) 55%,
+      rgba(8,5,13,.18)
+    ),
+    url('/mountpeaksolutions/IMG_0113.jpeg') !important;
+
+  background-position:center center !important;
   background-size:cover !important;
   background-repeat:no-repeat !important;
+
+  border-radius:0 0 28px 28px !important;
+  box-shadow:0 25px 70px rgba(120,70,180,.28) !important;
+
+  animation:mpMountainMove 14s ease-in-out infinite alternate !important;
 }
 
+/* cinematic purple glow */
+.hero-art::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  pointer-events:none !important;
+  z-index:2 !important;
+
+  background:
+    radial-gradient(
+      circle at 30% 27%,
+      rgba(255,215,255,.28) 0%,
+      rgba(190,110,255,.12) 12%,
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      transparent 45%,
+      rgba(7,4,15,.22) 100%
+    ) !important;
+
+  animation:mpMountainGlow 4s ease-in-out infinite !important;
+}
+
+/* glowing circular aura around summit */
+.hero-art::after{
+  content:"" !important;
+  position:absolute !important;
+
+  width:210px !important;
+  height:210px !important;
+
+  left:19% !important;
+  top:10% !important;
+
+  border:2px solid rgba(255,220,255,.75) !important;
+  border-radius:50% !important;
+
+  box-shadow:
+    0 0 12px rgba(255,210,255,.65),
+    0 0 35px rgba(190,100,255,.38),
+    inset 0 0 20px rgba(255,210,255,.18) !important;
+
+  pointer-events:none !important;
+  z-index:3 !important;
+
+  animation:
+    mpOrbitPulse 4s ease-in-out infinite,
+    mpOrbitRotate 18s linear infinite !important;
+}
+
+/* remove old geometric artwork */
 .hero-art .mountains,
 .hero-art .flag,
 .hero-art .sun{
   display:none !important;
+}
+
+/* slow cinematic mountain movement */
+@keyframes mpMountainMove{
+  0%{
+    background-size:100% auto;
+    background-position:48% center;
+  }
+
+  50%{
+    background-size:106% auto;
+    background-position:52% center;
+  }
+
+  100%{
+    background-size:111% auto;
+    background-position:55% center;
+  }
+}
+
+/* soft summit breathing glow */
+@keyframes mpMountainGlow{
+  0%,100%{
+    opacity:.55;
+  }
+
+  50%{
+    opacity:1;
+  }
+}
+
+/* glowing circle breathing */
+@keyframes mpOrbitPulse{
+  0%,100%{
+    transform:scale(.94);
+    opacity:.65;
+  }
+
+  50%{
+    transform:scale(1.06);
+    opacity:1;
+  }
+}
+
+/* subtle circular rotation */
+@keyframes mpOrbitRotate{
+  from{
+    rotate:0deg;
+  }
+
+  to{
+    rotate:360deg;
+  }
+}
+
+/* mobile */
+@media(max-width:768px){
+
+  .hero-art{
+    min-height:550px !important;
+    margin-top:12px !important;
+    border-radius:0 0 22px 22px !important;
+
+    animation-duration:16s !important;
+  }
+
+  .hero-art::after{
+    width:175px !important;
+    height:175px !important;
+    left:13% !important;
+    top:7% !important;
+  }
 }
