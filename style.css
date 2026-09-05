@@ -306,175 +306,136 @@
 .flag{
   display:none;
 }
-/* ===== MOUNTPeak REAL MOUNTAIN HERO ===== */
-
-.hero-art .mountains,
-.hero-art .mountains::before,
-.hero-art .mountains::after,
-.hero-art .mountains i,
-.hero-art .mountains b,
-.hero-art .mountains strong,
-.hero-art .flag {
-  display: none !important;
-}
-
-.hero-art {
-  background:
-    linear-gradient(90deg, rgba(8,5,13,.10), rgba(8,5,13,0)),
-    url('mountpeak-mountain-hero.jpg') center center / cover no-repeat !important;
-}
-/* ===== MOUNTAIN HERO — CINEMATIC MOTION ===== */
+/* ===== MOUNTPEAK CINEMATIC HERO ===== */
 
 .hero-art{
   position:relative !important;
-  overflow:hidden !important;
   min-height:620px !important;
-
-  background-image:
-    linear-gradient(
-      90deg,
-      rgba(8,5,13,.08),
-      rgba(8,5,13,0) 55%,
-      rgba(8,5,13,.18)
-    ),
-    url('/mountpeaksolutions/IMG_0113.jpeg') !important;
-
-  background-position:center center !important;
-  background-size:cover !important;
-  background-repeat:no-repeat !important;
-
-  border-radius:0 0 28px 28px !important;
-  box-shadow:0 25px 70px rgba(120,70,180,.28) !important;
-
-  animation:mpMountainMove 14s ease-in-out infinite alternate !important;
+  overflow:hidden !important;
+  background:
+    radial-gradient(circle at 67% 28%,rgba(201,155,234,.22) 0,transparent 19%),
+    radial-gradient(circle at 76% 48%,rgba(168,110,208,.18) 0,transparent 30%),
+    linear-gradient(180deg,#211331 0%,#130b20 48%,#08050d 100%) !important;
 }
 
-/* cinematic purple glow */
+/* atmospheric moon / summit glow */
 .hero-art::before{
   content:"" !important;
   position:absolute !important;
-  inset:0 !important;
-  pointer-events:none !important;
-  z-index:2 !important;
-
+  width:190px !important;
+  height:190px !important;
+  right:23% !important;
+  top:15% !important;
+  border-radius:50% !important;
   background:
-    radial-gradient(
-      circle at 30% 27%,
-      rgba(255,215,255,.28) 0%,
-      rgba(190,110,255,.12) 12%,
-      transparent 32%
-    ),
-    linear-gradient(
-      180deg,
-      transparent 45%,
-      rgba(7,4,15,.22) 100%
-    ) !important;
-
-  animation:mpMountainGlow 4s ease-in-out infinite !important;
+    radial-gradient(circle,
+      rgba(255,238,211,.95) 0 3%,
+      rgba(242,208,164,.55) 7%,
+      rgba(201,155,234,.20) 25%,
+      transparent 67%) !important;
+  filter:blur(1px) !important;
+  animation:mpPeakGlow 3.5s ease-in-out infinite !important;
+  z-index:1 !important;
 }
 
-/* glowing circular aura around summit */
+/* cinematic mountain silhouette */
 .hero-art::after{
   content:"" !important;
   position:absolute !important;
-
-  width:210px !important;
-  height:210px !important;
-
-  left:19% !important;
-  top:10% !important;
-
-  border:2px solid rgba(255,220,255,.75) !important;
-  border-radius:50% !important;
-
-  box-shadow:
-    0 0 12px rgba(255,210,255,.65),
-    0 0 35px rgba(190,100,255,.38),
-    inset 0 0 20px rgba(255,210,255,.18) !important;
-
-  pointer-events:none !important;
-  z-index:3 !important;
-
-  animation:
-    mpOrbitPulse 4s ease-in-out infinite,
-    mpOrbitRotate 18s linear infinite !important;
+  left:-12% !important;
+  right:-12% !important;
+  bottom:-2px !important;
+  height:68% !important;
+  background:
+    linear-gradient(135deg,
+      transparent 0 15%,
+      #2c1940 15.2% 25%,
+      transparent 25.2%),
+    linear-gradient(145deg,
+      transparent 0 30%,
+      #1d102d 30.2% 43%,
+      transparent 43.2%),
+    linear-gradient(135deg,
+      transparent 0 46%,
+      #120a1e 46.2% 61%,
+      transparent 61.2%),
+    linear-gradient(155deg,
+      transparent 0 58%,
+      #09060e 58.2% 100%) !important;
+  transform:scale(1.08);
+  filter:drop-shadow(0 -15px 35px rgba(168,110,208,.18));
+  z-index:2 !important;
+  animation:mpMountainDrift 16s ease-in-out infinite alternate !important;
 }
 
-/* remove old geometric artwork */
+/* summit beam */
+.hero-art{
+  --mp-beam:linear-gradient(
+    180deg,
+    rgba(242,208,164,.32),
+    rgba(201,155,234,.08) 42%,
+    transparent 78%
+  );
+}
+
 .hero-art .mountains,
 .hero-art .flag,
 .hero-art .sun{
   display:none !important;
 }
 
-/* slow cinematic mountain movement */
-@keyframes mpMountainMove{
-  0%{
-    background-size:100% auto;
-    background-position:48% center;
-  }
-
-  50%{
-    background-size:106% auto;
-    background-position:52% center;
-  }
-
-  100%{
-    background-size:111% auto;
-    background-position:55% center;
-  }
+/* subtle particles */
+.hero-copy{
+  z-index:5 !important;
 }
 
-/* soft summit breathing glow */
-@keyframes mpMountainGlow{
+@keyframes mpPeakGlow{
   0%,100%{
-    opacity:.55;
-  }
-
-  50%{
-    opacity:1;
-  }
-}
-
-/* glowing circle breathing */
-@keyframes mpOrbitPulse{
-  0%,100%{
-    transform:scale(.94);
+    transform:scale(.88);
     opacity:.65;
+    filter:blur(1px);
   }
-
   50%{
-    transform:scale(1.06);
+    transform:scale(1.12);
     opacity:1;
+    filter:blur(0);
   }
 }
 
-/* subtle circular rotation */
-@keyframes mpOrbitRotate{
-  from{
-    rotate:0deg;
+@keyframes mpMountainDrift{
+  0%{
+    transform:translateX(-1.5%) scale(1.08);
   }
-
-  to{
-    rotate:360deg;
+  50%{
+    transform:translateX(1%) scale(1.11);
+  }
+  100%{
+    transform:translateX(-.5%) scale(1.09);
   }
 }
 
-/* mobile */
 @media(max-width:768px){
+  .hero{
+    grid-template-columns:1fr !important;
+    padding:55px 6% 0 !important;
+  }
 
   .hero-art{
-    min-height:550px !important;
-    margin-top:12px !important;
-    border-radius:0 0 22px 22px !important;
+    min-height:390px !important;
+    margin-top:10px !important;
+    background:
+      radial-gradient(circle at 65% 28%,rgba(201,155,234,.24),transparent 22%),
+      linear-gradient(180deg,#211331,#08050d) !important;
+  }
 
-    animation-duration:16s !important;
+  .hero-art::before{
+    width:145px !important;
+    height:145px !important;
+    right:18% !important;
+    top:9% !important;
   }
 
   .hero-art::after{
-    width:175px !important;
-    height:175px !important;
-    left:13% !important;
-    top:7% !important;
+    height:65% !important;
   }
 }
