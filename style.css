@@ -323,3 +323,22 @@
     linear-gradient(90deg, rgba(8,5,13,.10), rgba(8,5,13,0)),
     url('mountpeak-mountain-hero.jpg') center center / cover no-repeat !important;
 }
+/* ===== MOUNTAIN HERO IMAGE FIX ===== */
+
+.hero-art{
+  background:
+    linear-gradient(90deg,rgba(8,5,13,.12),rgba(8,5,13,0)),
+    url('mountpeak-mountain-hero.jpg') center right / cover no-repeat !important;
+}
+
+.hero-art .mountains{
+  display:none !important;
+}
+
+.hero-art .flag{
+  display:none !important;
+}
+
+.hero-art .sun{
+  display:none !important;
+}
