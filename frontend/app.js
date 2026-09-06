@@ -40,3 +40,38 @@ document.getElementById('aiOpen')?.addEventListener('click',()=>aiPanel.setAttri
 document.getElementById('aiClose')?.addEventListener('click',()=>aiPanel.setAttribute('aria-hidden','true'));
 document.getElementById('aiForm')?.addEventListener('submit',async e=>{e.preventDefault();const input=document.getElementById('aiInput');const text=input.value.trim();if(!text)return;addMessage(text,'user');input.value='';try{const r=await fetch(`${API}/ai/navigation`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});const d=await r.json();addMessage(d.reply||'I can help you navigate the website.');if(d.action){setTimeout(()=>{if(d.action==='profile')location.hash='profile';if(d.action==='contact')location.hash='contact';if(d.action==='services')location.hash='services';if(d.action==='candidates')location.hash='candidates';if(d.action==='employers')location.hash='employers';if(d.action==='payment'){paymentPanel.setAttribute('aria-hidden','false');}},300)}}catch{addMessage('I’m temporarily unavailable. Please use the navigation menu or contact our team.');}});
 (async()=>{const qs=new URLSearchParams(location.search);const orderId=qs.get('token');if(qs.get('paypal_return')==='1'&&orderId){try{const r=await fetch(`${API}/payments/paypal/capture`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId})});const d=await r.json();if(r.ok)alert(`Payment status: ${d.status}`);else alert(d.message||'Payment capture failed.');}catch{} history.replaceState({},'',location.pathname);}})();
+/* ===== MOUNTPEAK TIMEZONE WELCOME AUDIO ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  function getWelcomeAudio() {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) {
+      return 'audio/welcome-morning.mp3';
+    }
+
+    if (hour >= 12 && hour < 17) {
+      return 'audio/welcome-afternoon.mp3';
+    }
+
+    return 'audio/welcome-evening.mp3';
+  }
+
+  const welcomeAudio = new Audio(getWelcomeAudio());
+
+  welcomeAudio.preload = 'auto';
+  welcomeAudio.volume = 0.9;
+
+  function playWelcomeAudio() {
+    welcomeAudio.play().catch(() => {
+      document.addEventListener(
+        'pointerdown',
+        () => {
+          welcomeAudio.play().catch(() => {});
+        },
+        { once: true }
+      );
+    });
+  }
+
+  playWelcomeAudio();
+});
