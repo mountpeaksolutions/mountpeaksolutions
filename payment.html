@@ -1,1 +1,485 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Payment Center | MountPeak Group</title><link rel="stylesheet" href="style.css"></head><body><header class="site-header"><a class="brand" href="index.html"><img class="brand-logo" src="logo.png" alt="MountPeak Group logo"></a><nav class="nav"><a href="index.html">Home</a><a href="index.html#about">About Us</a><a href="index.html#services">Services</a><a href="index.html#candidates">Candidates</a><a href="index.html#employers">Employers</a><a href="index.html#jobs">Jobs</a><a href="index.html#contact">Contact</a></nav></header><main class="payment-page"><p class="eyebrow">MOUNTPEAK GROUP</p><h1>Payment Center</h1><p class="lead">Choose your preferred payment method.</p><div class="payment-methods"><div class="method-card"><div class="method-icon">💳</div><h2>Credit / Debit Card</h2><p>Pay securely using your Visa, Mastercard or other supported card.</p><a class="btn navy full-btn" href="#card-checkout">Pay with Card</a><small>Card processing link will be connected to your payment provider.</small></div><div class="method-card"><div class="method-icon">P</div><h2>PayPal</h2><p>Continue to PayPal for secure payment through your PayPal account.</p><a class="btn navy full-btn" href="#paypal-checkout">Pay with PayPal</a><small>Your official PayPal checkout link will be connected here.</small></div></div><a class="back-link" href="index.html">← Back to MountPeak Group</a></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Secure Enrollment | MountPeak Group</title>
+
+<meta
+  name="description"
+  content="Secure enrollment and payment center for MountPeak Group."
+>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+
+  <a class="brand" href="index.html">
+    <img
+      class="brand-logo"
+      src="logo.png"
+      alt="MountPeak Group"
+    >
+  </a>
+
+  <nav class="nav">
+
+    <a href="index.html">Home</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#services">Services</a>
+    <a href="index.html#jobs">Jobs</a>
+    <a href="index.html#contact">Contact</a>
+
+  </nav>
+
+  <a
+    class="nav-button"
+    href="index.html#profile"
+  >
+    Submit Profile →
+  </a>
+
+</header>
+
+
+<main class="payment-page">
+
+  <section class="payment-hero">
+
+    <p class="eyebrow">
+      MOUNTPEAK GROUP • SECURE CHECKOUT
+    </p>
+
+    <h1>
+      Complete Your
+      <em>Enrollment.</em>
+    </h1>
+
+    <p class="lead">
+      Review your enrollment details and select your
+      preferred payment method. All payments are
+      processed in USD.
+    </p>
+
+  </section>
+
+
+  <!-- ENROLLMENT SUMMARY -->
+
+  <section
+    class="checkout-summary"
+    id="checkoutSummary"
+  >
+
+    <div class="summary-header">
+
+      <div>
+
+        <span>ENROLLMENT</span>
+
+        <h2>
+          MountPeak Group
+        </h2>
+
+      </div>
+
+      <div class="secure-badge">
+        🔒 Secure
+      </div>
+
+    </div>
+
+
+    <div class="summary-grid">
+
+      <div>
+        <small>Full Name</small>
+        <strong id="summaryName">—</strong>
+      </div>
+
+      <div>
+        <small>Email</small>
+        <strong id="summaryEmail">—</strong>
+      </div>
+
+      <div>
+        <small>Contact</small>
+        <strong id="summaryPhone">—</strong>
+      </div>
+
+      <div>
+        <small>Location</small>
+        <strong id="summaryLocation">—</strong>
+      </div>
+
+    </div>
+
+
+    <div class="amount-box">
+
+      <span>Enrollment Amount</span>
+
+      <strong>
+        $<span id="summaryAmount">0.00</span>
+        <small>USD</small>
+      </strong>
+
+    </div>
+
+  </section>
+
+
+  <!-- PAYMENT METHODS -->
+
+  <section class="payment-methods">
+
+    <div class="method-card">
+
+      <div class="method-icon">
+        💳
+      </div>
+
+      <p class="method-label">
+        CARD PAYMENT
+      </p>
+
+      <h2>
+        Credit / Debit Card
+      </h2>
+
+      <p>
+        Pay securely using your supported
+        credit or debit card.
+      </p>
+
+
+      <!--
+        IMPORTANT:
+        Replace CARD_PAYMENT_URL below with
+        your real payment-provider checkout URL.
+      -->
+
+      <a
+        id="cardPaymentButton"
+        class="btn gold full-btn"
+        href="#"
+      >
+        Continue with Card →
+      </a>
+
+
+      <small class="method-note">
+        Secure checkout • USD
+      </small>
+
+    </div>
+
+
+    <div class="method-card">
+
+      <div class="method-icon paypal-icon">
+        P
+      </div>
+
+      <p class="method-label">
+        PAYPAL
+      </p>
+
+      <h2>
+        PayPal
+      </h2>
+
+      <p>
+        Continue to PayPal for secure payment
+        through your PayPal account.
+      </p>
+
+
+      <!--
+        IMPORTANT:
+        Replace PAYPAL_PAYMENT_URL below with
+        your real PayPal checkout URL.
+      -->
+
+      <a
+        id="paypalPaymentButton"
+        class="btn ghost full-btn"
+        href="#"
+      >
+        Continue with PayPal →
+      </a>
+
+
+      <small class="method-note">
+        Secure PayPal checkout • USD
+      </small>
+
+    </div>
+
+  </section>
+
+
+  <!-- PAYMENT INFORMATION -->
+
+  <section class="payment-info">
+
+    <div>
+
+      <span class="info-icon">✓</span>
+
+      <div>
+        <strong>Secure Processing</strong>
+        <p>
+          Your payment is handled through the
+          selected payment provider.
+        </p>
+      </div>
+
+    </div>
+
+
+    <div>
+
+      <span class="info-icon">＄</span>
+
+      <div>
+        <strong>USD Currency</strong>
+        <p>
+          Enrollment payments are displayed
+          and processed in US Dollars.
+        </p>
+      </div>
+
+    </div>
+
+
+    <div>
+
+      <span class="info-icon">🧾</span>
+
+      <div>
+        <strong>Payment Confirmation</strong>
+        <p>
+          Keep your payment confirmation for
+          your records.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <div class="payment-footer-links">
+
+    <a href="index.html">
+      ← Return to MountPeak Group
+    </a>
+
+    <a href="index.html#contact">
+      Need Help?
+    </a>
+
+  </div>
+
+</main>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const stored =
+    sessionStorage.getItem("mountpeakEnrollment");
+
+  const name =
+    document.getElementById("summaryName");
+
+  const email =
+    document.getElementById("summaryEmail");
+
+  const phone =
+    document.getElementById("summaryPhone");
+
+  const location =
+    document.getElementById("summaryLocation");
+
+  const amount =
+    document.getElementById("summaryAmount");
+
+
+  if (stored) {
+
+    try {
+
+      const data =
+        JSON.parse(stored);
+
+
+      if (name) {
+        name.textContent =
+          data.name || "—";
+      }
+
+
+      if (email) {
+        email.textContent =
+          data.email || "—";
+      }
+
+
+      if (phone) {
+
+        phone.textContent =
+          (data.countryCode || "") +
+          " " +
+          (data.phone || "—");
+
+      }
+
+
+      if (location) {
+
+        const parts = [
+          data.city,
+          data.state,
+          data.country
+        ].filter(Boolean);
+
+        location.textContent =
+          parts.length
+            ? parts.join(", ")
+            : "—";
+
+      }
+
+
+      if (amount) {
+
+        amount.textContent =
+          Number(data.amount || 0)
+            .toFixed(2);
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Enrollment data could not be read.",
+        error
+      );
+
+    }
+
+  }
+
+
+  /*
+    =====================================================
+    PAYMENT PROVIDER LINKS
+    =====================================================
+
+    DO NOT put fake URLs here.
+
+    When you give me your actual:
+      1. Card payment checkout URL
+      2. PayPal payment URL
+
+    we will put them here.
+  */
+
+
+  const CARD_PAYMENT_URL = "";
+
+  const PAYPAL_PAYMENT_URL = "";
+
+
+  const cardButton =
+    document.getElementById(
+      "cardPaymentButton"
+    );
+
+  const paypalButton =
+    document.getElementById(
+      "paypalPaymentButton"
+    );
+
+
+  if (
+    cardButton &&
+    CARD_PAYMENT_URL
+  ) {
+
+    cardButton.href =
+      CARD_PAYMENT_URL;
+
+  }
+
+
+  if (
+    paypalButton &&
+    PAYPAL_PAYMENT_URL
+  ) {
+
+    paypalButton.href =
+      PAYPAL_PAYMENT_URL;
+
+  }
+
+
+  /*
+    Prevent users from clicking an
+    unconfigured payment button.
+  */
+
+  if (
+    cardButton &&
+    !CARD_PAYMENT_URL
+  ) {
+
+    cardButton.addEventListener(
+      "click",
+      function (e) {
+
+        e.preventDefault();
+
+        alert(
+          "Card payment checkout is being connected. Please try again shortly."
+        );
+
+      }
+    );
+
+  }
+
+
+  if (
+    paypalButton &&
+    !PAYPAL_PAYMENT_URL
+  ) {
+
+    paypalButton.addEventListener(
+      "click",
+      function (e) {
+
+        e.preventDefault();
+
+        alert(
+          "PayPal checkout is being connected. Please try again shortly."
+        );
+
+      }
+    );
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
