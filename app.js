@@ -1,190 +1,24 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-  /* =========================================
-     MOBILE MENU
-  ========================================= */
+  /* ================= MOBILE MENU ================= */
 
-  const menu = document.getElementById("menuButton");
-  const nav = document.getElementById("mainNav");
+  const menuButton = document.getElementById("menuButton");
+  const mainNav = document.getElementById("mainNav");
 
-  if (menu && nav) {
-
-    menu.addEventListener("click", function (e) {
-      e.stopPropagation();
-
-      const open = nav.classList.toggle("mobile-open");
-
-      menu.textContent = open ? "×" : "☰";
-      menu.setAttribute("aria-expanded", open ? "true" : "false");
+  if (menuButton && mainNav) {
+    menuButton.addEventListener("click", () => {
+      mainNav.classList.toggle("open");
     });
 
-    nav.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        nav.classList.remove("mobile-open");
-        menu.textContent = "☰";
-        menu.setAttribute("aria-expanded", "false");
+    mainNav.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        mainNav.classList.remove("open");
       });
     });
-
-    document.addEventListener("click", function (e) {
-      if (
-        window.innerWidth <= 900 &&
-        !nav.contains(e.target) &&
-        !menu.contains(e.target)
-      ) {
-        nav.classList.remove("mobile-open");
-        menu.textContent = "☰";
-      }
-    });
   }
 
 
-  /* =========================================
-     ENROLL MODAL
-  ========================================= */
-
-  const enrollModal = document.getElementById("enrollModal");
-  const enrollClose = document.getElementById("enrollClose");
-  const enrollForm = document.getElementById("enrollForm");
-
-  const enrollButtons = document.querySelectorAll("[data-enroll]");
-
-  function openEnroll() {
-
-    if (!enrollModal) return;
-
-    enrollModal.classList.add("open");
-    enrollModal.setAttribute("aria-hidden", "false");
-
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeEnroll() {
-
-    if (!enrollModal) return;
-
-    enrollModal.classList.remove("open");
-    enrollModal.setAttribute("aria-hidden", "true");
-
-    document.body.style.overflow = "";
-  }
-
-  enrollButtons.forEach(function (button) {
-
-    button.addEventListener("click", function (e) {
-      e.preventDefault();
-      openEnroll();
-    });
-
-  });
-
-  if (enrollClose) {
-    enrollClose.addEventListener("click", closeEnroll);
-  }
-
-  if (enrollModal) {
-
-    enrollModal.addEventListener("click", function (e) {
-
-      if (e.target === enrollModal) {
-        closeEnroll();
-      }
-
-    });
-  }
-
-  document.addEventListener("keydown", function (e) {
-
-    if (e.key === "Escape") {
-      closeEnroll();
-    }
-
-  });
-
-
-  /* =========================================
-     ENROLL FORM
-  ========================================= */
-
-  if (enrollForm) {
-
-    enrollForm.addEventListener("submit", function (e) {
-
-      e.preventDefault();
-
-      const formData = new FormData(enrollForm);
-
-      const amount = formData.get("amount");
-
-      if (!amount || Number(amount) <= 0) {
-        alert("Please enter the agreed enrollment amount in USD.");
-        return;
-      }
-
-      const enrollment = {
-
-        name: formData.get("enroll_name") || "",
-        email: formData.get("enroll_email") || "",
-
-        countryCode: formData.get("country_code") || "+1",
-
-        phone: formData.get("enroll_phone") || "",
-
-        alternativePhone:
-          formData.get("alternative_phone") || "",
-
-        street:
-          formData.get("street_address") || "",
-
-        apartment:
-          formData.get("apt") || "",
-
-        city:
-          formData.get("city") || "",
-
-        state:
-          formData.get("state") || "",
-
-        zip:
-          formData.get("zip") || "",
-
-        country:
-          formData.get("country") || "",
-
-        amount:
-          Number(amount).toFixed(2),
-
-        currency: "USD",
-
-        createdAt:
-          new Date().toISOString()
-      };
-
-
-      /*
-        Save enrollment temporarily so the payment page
-        can read the candidate information.
-      */
-
-      sessionStorage.setItem(
-        "mountpeakEnrollment",
-        JSON.stringify(enrollment)
-      );
-
-
-      /*
-        Continue to the existing payment page.
-      */
-
-      window.location.href = "payment.html";
-
-    });
-  }
-
-
-  /* =========================================
-     JOB SEARCH
-  ========================================= */
+  /* ================= JOB SEARCH ================= */
 
   const jobSearch = document.getElementById("jobSearch");
   const jobType = document.getElementById("jobType");
@@ -195,32 +29,25 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!jobList) return;
 
     const searchValue =
-      jobSearch
-        ? jobSearch.value.toLowerCase().trim()
-        : "";
+      jobSearch?.value.trim().toLowerCase() || "";
 
     const typeValue =
-      jobType
-        ? jobType.value.toLowerCase().trim()
-        : "";
+      jobType?.value.trim().toLowerCase() || "";
 
-    const jobs =
-      jobList.querySelectorAll("article");
+    const jobs = jobList.querySelectorAll("article");
 
-
-    jobs.forEach(function (job) {
+    jobs.forEach(job => {
 
       const role =
-        (job.getAttribute("data-role") || "")
-          .toLowerCase();
+        job.getAttribute("data-role")?.toLowerCase() || "";
 
-      const text =
+      const jobText =
         job.textContent.toLowerCase();
 
       const matchesSearch =
         !searchValue ||
         role.includes(searchValue) ||
-        text.includes(searchValue);
+        jobText.includes(searchValue);
 
       const matchesType =
         !typeValue ||
@@ -228,30 +55,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
       job.style.display =
         matchesSearch && matchesType
-          ? "flex"
+          ? ""
           : "none";
 
     });
   }
 
   if (jobSearch) {
-    jobSearch.addEventListener(
-      "input",
-      filterJobs
-    );
+    jobSearch.addEventListener("input", filterJobs);
   }
 
   if (jobType) {
-    jobType.addEventListener(
-      "change",
-      filterJobs
-    );
+    jobType.addEventListener("change", filterJobs);
   }
 
 
-  /* =========================================
-     AI NAVIGATION
-  ========================================= */
+  /* ================= JOB APPLICATION ================= */
+
+  const selectedJob = document.getElementById("selectedJob");
+
+  document.querySelectorAll("[data-job]").forEach(link => {
+
+    link.addEventListener("click", () => {
+
+      const jobName =
+        link.getAttribute("data-job") || "";
+
+      if (selectedJob) {
+        selectedJob.value = jobName;
+      }
+
+    });
+
+  });
+
+
+  /* ================= SMOOTH SCROLL ================= */
+
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+
+    link.addEventListener("click", event => {
+
+      const targetId =
+        link.getAttribute("href");
+
+      if (!targetId || targetId === "#") {
+        return;
+      }
+
+      const target =
+        document.querySelector(targetId);
+
+      if (!target) {
+        return;
+      }
+
+      event.preventDefault();
+
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    });
+
+  });
+
+
+  /* ================= AI NAVIGATION ================= */
 
   const aiToggle =
     document.getElementById("aiToggle");
@@ -259,116 +130,55 @@ document.addEventListener("DOMContentLoaded", function () {
   const aiPanel =
     document.getElementById("aiPanel");
 
-
   if (aiToggle && aiPanel) {
 
-    aiToggle.addEventListener("click", function (e) {
+    aiToggle.addEventListener("click", () => {
 
-      e.stopPropagation();
-
-      const opening =
+      const isHidden =
         aiPanel.hasAttribute("hidden");
 
-      if (opening) {
-
+      if (isHidden) {
         aiPanel.removeAttribute("hidden");
-
-        aiToggle.setAttribute(
-          "aria-expanded",
-          "true"
-        );
-
       } else {
-
-        aiPanel.setAttribute(
-          "hidden",
-          ""
-        );
-
-        aiToggle.setAttribute(
-          "aria-expanded",
-          "false"
-        );
-
+        aiPanel.setAttribute("hidden", "");
       }
 
     });
 
-
-    document.querySelectorAll(
-      ".ai-links [data-go]"
-    ).forEach(function (button) {
-
-      button.addEventListener(
-        "click",
-        function () {
-
-          const target =
-            button.getAttribute("data-go");
-
-          aiPanel.setAttribute(
-            "hidden",
-            ""
-          );
-
-          aiToggle.setAttribute(
-            "aria-expanded",
-            "false"
-          );
-
-          if (target) {
-
-            const section =
-              document.querySelector(target);
-
-            if (section) {
-
-              section.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-              });
-
-            }
-
-          }
-
-        }
-      );
-
-    });
   }
 
 
-  /* =========================================
-     AI PANEL ENROLL BUTTONS
-  ========================================= */
+  /* ================= AI NAVIGATION LINKS ================= */
 
-  document.querySelectorAll(
-    ".ai-links [data-enroll]"
-  ).forEach(function (button) {
+  document.querySelectorAll("[data-go]").forEach(button => {
 
-    button.addEventListener(
-      "click",
-      function () {
+    button.addEventListener("click", () => {
 
-        if (aiPanel) {
-          aiPanel.setAttribute(
-            "hidden",
-            ""
-          );
-        }
+      const targetId =
+        button.getAttribute("data-go");
 
-        openEnroll();
+      const target =
+        document.querySelector(targetId);
+
+      if (target) {
+
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
 
       }
-    );
+
+      if (aiPanel) {
+        aiPanel.setAttribute("hidden", "");
+      }
+
+    });
 
   });
 
 
-  /* =========================================
-     AI CHAT
-  ========================================= */
+  /* ================= AI CHAT ================= */
 
   const chatToggle =
     document.getElementById("chatToggle");
@@ -395,20 +205,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     chatBox.removeAttribute("hidden");
 
-    if (chatToggle) {
-      chatToggle.setAttribute(
-        "aria-expanded",
-        "true"
-      );
-    }
-
-    setTimeout(function () {
-
-      if (chatInput) {
-        chatInput.focus();
-      }
-
-    }, 100);
   }
 
 
@@ -416,356 +212,316 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!chatBox) return;
 
-    chatBox.setAttribute(
-      "hidden",
-      ""
-    );
-
-    if (chatToggle) {
-      chatToggle.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-    }
-  }
-
-
-  if (chatToggle) {
-
-    chatToggle.addEventListener(
-      "click",
-      function (e) {
-
-        e.stopPropagation();
-
-        if (
-          chatBox &&
-          chatBox.hasAttribute("hidden")
-        ) {
-          openChat();
-        } else {
-          closeChat();
-        }
-
-      }
-    );
-  }
-
-
-  if (chatClose) {
-
-    chatClose.addEventListener(
-      "click",
-      closeChat
-    );
+    chatBox.setAttribute("hidden", "");
 
   }
 
 
-  /* =========================================
-     AI CHAT RESPONSES
-  ========================================= */
-
-  function addMessage(text, type) {
+  function addUserMessage(message) {
 
     if (!chatMessages) return;
 
-    const message =
+    const div =
       document.createElement("div");
 
-    message.textContent = text;
+    div.className = "user-msg";
 
+    div.textContent = message;
 
-    if (type === "user") {
-
-      message.style.width = "max-content";
-      message.style.maxWidth = "88%";
-      message.style.margin =
-        "0 0 8px auto";
-
-      message.style.padding =
-        "9px 11px";
-
-      message.style.border =
-        "1px solid rgba(230,205,248,.14)";
-
-      message.style.borderRadius =
-        "10px";
-
-      message.style.color =
-        "#eee7f0";
-
-      message.style.background =
-        "rgba(145,76,191,.18)";
-
-      message.style.fontSize =
-        "10px";
-
-    } else {
-
-      message.className =
-        "bot-msg";
-
-      message.style.marginBottom =
-        "8px";
-    }
-
-
-    chatMessages.appendChild(
-      message
-    );
+    chatMessages.appendChild(div);
 
     chatMessages.scrollTop =
       chatMessages.scrollHeight;
+
+  }
+
+
+  function addBotMessage(message) {
+
+    if (!chatMessages) return;
+
+    const div =
+      document.createElement("div");
+
+    div.className = "bot-msg";
+
+    div.textContent = message;
+
+    chatMessages.appendChild(div);
+
+    chatMessages.scrollTop =
+      chatMessages.scrollHeight;
+
   }
 
 
   function getAIResponse(question) {
 
     const q =
-      question.toLowerCase();
+      question.toLowerCase().trim();
 
 
     if (
-      q.includes("enroll") ||
-      q.includes("enrollment")
+      q.includes("job") ||
+      q.includes("jobs") ||
+      q.includes("vacancy") ||
+      q.includes("opening")
     ) {
 
-      return "You can enroll with MountPeak Group by clicking the Enroll button. Enter your details and agreed amount in USD, then continue to payment.";
+      return "You can view current opportunities in the Jobs section. Select a position and click Apply to submit your profile and resume.";
 
     }
 
 
     if (
       q.includes("profile") ||
-      q.includes("submit") ||
       q.includes("resume") ||
-      q.includes("apply")
+      q.includes("cv")
     ) {
 
-      return "Go to Submit Your Profile, complete your professional details and upload your resume.";
-
-    }
-
-
-    if (
-      q.includes("job") ||
-      q.includes("jobs") ||
-      q.includes("career") ||
-      q.includes("opening")
-    ) {
-
-      return "Visit the Jobs section to search available opportunities by role or skill and apply.";
+      return "You can submit your professional profile from the Submit Your Profile section. Complete the form and upload your PDF, DOC or DOCX resume.";
 
     }
 
 
     if (
       q.includes("service") ||
-      q.includes("solution") ||
-      q.includes("technology") ||
-      q.includes("it ")
+      q.includes("services")
     ) {
 
-      return "MountPeak Group provides IT Solutions, Cloud & Digital, Software Solutions, Technology Consulting, Workforce Solutions and Professional Services.";
+      return "MountPeak Group provides IT Solutions, Cloud & Digital services, Software Solutions, Technology Consulting, Workforce Solutions and Professional Services.";
 
     }
 
 
     if (
-      q.includes("payment") ||
-      q.includes("pay") ||
-      q.includes("card") ||
-      q.includes("paypal")
+      q.includes("join") ||
+      q.includes("enroll") ||
+      q.includes("candidate")
     ) {
 
-      return "After completing enrollment, you can continue to the secure Payment Center and select an available payment method.";
+      return "To join MountPeak Group, complete the candidate profile form and submit your professional details and resume. Our team can then review your information.";
+
+    }
+
+
+    if (
+      q.includes("employer") ||
+      q.includes("business") ||
+      q.includes("hire")
+    ) {
+
+      return "Employers can contact MountPeak Group to discuss technology, talent, workforce and business requirements.";
 
     }
 
 
     if (
       q.includes("contact") ||
-      q.includes("email") ||
-      q.includes("team")
+      q.includes("email")
     ) {
 
-      return "You can contact the MountPeak Group team through the Contact section.";
+      return "You can contact the MountPeak Group team at hr@mountpeakgroup.com.";
 
     }
 
 
-    if (
-      q.includes("hello") ||
-      q.includes("hi") ||
-      q.includes("hey")
-    ) {
+    return "I can help you navigate MountPeak Group. You can ask me about jobs, submitting your profile, services, employers or contacting our team.";
 
-      return "Hi! Welcome to MountPeak Group. I can help you with Jobs, Services, Profile Submission, Enrollment and Contact.";
+  }
 
+
+  function sendChatMessage(message) {
+
+    if (!message || !message.trim()) {
+      return;
     }
 
+    const cleanMessage =
+      message.trim();
 
-    return "I can help you with Jobs, Services, Submit Profile, Enrollment, Payment and Contact. What would you like to know?";
-  }
+    addUserMessage(cleanMessage);
 
+    const response =
+      getAIResponse(cleanMessage);
 
-  function sendChat() {
-
-    if (!chatInput) return;
-
-    const text =
-      chatInput.value.trim();
-
-    if (!text) return;
-
-
-    addMessage(
-      text,
-      "user"
-    );
-
-    chatInput.value = "";
-
-
-    setTimeout(function () {
-
-      addMessage(
-        getAIResponse(text),
-        "bot"
-      );
-
-    }, 350);
-  }
-
-
-  if (chatSend) {
-
-    chatSend.addEventListener(
-      "click",
-      sendChat
-    );
+    setTimeout(() => {
+      addBotMessage(response);
+    }, 300);
 
   }
 
 
-  if (chatInput) {
+  if (chatToggle) {
+    chatToggle.addEventListener("click", openChat);
+  }
 
-    chatInput.addEventListener(
-      "keydown",
-      function (e) {
 
-        if (e.key === "Enter") {
+  if (chatClose) {
+    chatClose.addEventListener("click", closeChat);
+  }
 
-          e.preventDefault();
 
-          sendChat();
+  if (chatSend && chatInput) {
 
-        }
+    chatSend.addEventListener("click", () => {
+
+      const message =
+        chatInput.value;
+
+      sendChatMessage(message);
+
+      chatInput.value = "";
+
+    });
+
+
+    chatInput.addEventListener("keydown", event => {
+
+      if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        const message =
+          chatInput.value;
+
+        sendChatMessage(message);
+
+        chatInput.value = "";
 
       }
-    );
+
+    });
 
   }
 
 
-  /* =========================================
-     CHAT SUGGESTIONS
-  ========================================= */
+  /* ================= CHAT SUGGESTIONS ================= */
 
-  document.querySelectorAll(
-    ".chat-suggestions button"
-  ).forEach(function (button) {
+  document.querySelectorAll("[data-chat]").forEach(button => {
 
-    button.addEventListener(
-      "click",
-      function () {
+    button.addEventListener("click", () => {
 
-        const question =
-          button.getAttribute("data-chat");
+      const message =
+        button.getAttribute("data-chat");
 
-        if (!question) return;
+      openChat();
 
-        openChat();
+      sendChatMessage(message);
 
-        if (chatInput) {
-          chatInput.value =
-            question;
-        }
-
-        sendChat();
-
-      }
-    );
+    });
 
   });
 
 
-  /* =========================================
-     CLOSE AI ON OUTSIDE CLICK
-  ========================================= */
+  /* ================= CANDIDATE FORM ================= */
 
-  document.addEventListener(
-    "click",
-    function (e) {
+  const candidateForm =
+    document.getElementById("candidateForm");
 
-      if (
-        aiPanel &&
-        aiToggle &&
-        !aiPanel.contains(e.target) &&
-        !aiToggle.contains(e.target)
-      ) {
+  if (candidateForm) {
 
-        aiPanel.setAttribute(
-          "hidden",
-          ""
+    candidateForm.addEventListener("submit", () => {
+
+      const submitButton =
+        candidateForm.querySelector(
+          'button[type="submit"]'
         );
 
-        aiToggle.setAttribute(
-          "aria-expanded",
-          "false"
-        );
+      if (submitButton) {
+
+        submitButton.textContent =
+          "Submitting Profile...";
+
+        submitButton.disabled = true;
 
       }
 
-    }
-  );
+    });
+
+  }
 
 
-  /* =========================================
-     SMOOTH ANCHOR NAVIGATION
-  ========================================= */
+  /* ================= CONTACT FORM ================= */
 
   document.querySelectorAll(
-    'a[href^="#"]'
-  ).forEach(function (link) {
+    'form[action*="formsubmit.co"]'
+  ).forEach(form => {
 
-    link.addEventListener(
-      "click",
-      function (e) {
+    if (form.id === "candidateForm") {
+      return;
+    }
 
-        const target =
-          link.getAttribute("href");
+    form.addEventListener("submit", () => {
 
-        if (
-          !target ||
-          target === "#"
-        ) return;
+      const submitButton =
+        form.querySelector(
+          'button[type="submit"]'
+        );
 
-        const element =
-          document.querySelector(target);
+      if (submitButton) {
 
-        if (!element) return;
+        submitButton.textContent =
+          "Sending...";
 
-        e.preventDefault();
-
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
+        submitButton.disabled = true;
 
       }
+
+    });
+
+  });
+
+
+  /* ================= JOB APPLY BUTTON ================= */
+
+  document.querySelectorAll(
+    '#jobList [data-job]'
+  ).forEach(link => {
+
+    link.addEventListener("click", () => {
+
+      const jobName =
+        link.getAttribute("data-job");
+
+      if (selectedJob && jobName) {
+        selectedJob.value = jobName;
+      }
+
+    });
+
+  });
+
+
+  /* ================= CLOSE AI PANELS ================= */
+
+  document.addEventListener("click", event => {
+
+    if (
+      aiPanel &&
+      aiToggle &&
+      !aiPanel.contains(event.target) &&
+      !aiToggle.contains(event.target)
+    ) {
+
+      aiPanel.setAttribute("hidden", "");
+
+    }
+
+  });
+
+
+  /* ================= YEAR ================= */
+
+  const yearElements =
+    document.querySelectorAll(
+      "[data-current-year]"
     );
+
+  yearElements.forEach(element => {
+
+    element.textContent =
+      new Date().getFullYear();
 
   });
 
