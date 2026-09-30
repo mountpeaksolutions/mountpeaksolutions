@@ -3,8 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>MountPeak Group | Where Talent Meets Its Next Peak</title>
-<meta name="description" content="MountPeak Group — Technology, talent and business solutions for a connected future.">
+
+<meta
+  name="description"
+  content="MountPeak Group — Technology, talent and business solutions for a connected future."
+>
+
 <link rel="stylesheet" href="style.css">
 <script defer src="app.js"></script>
 </head>
@@ -14,13 +20,25 @@
 <!-- ================= HEADER ================= -->
 
 <header class="site-header">
+
   <a class="brand" href="#home" aria-label="MountPeak Group home">
-    <img class="brand-logo" src="logo.png" alt="MountPeak Group">
+    <img
+      class="brand-logo"
+      src="logo.png"
+      alt="MountPeak Group"
+    >
   </a>
 
-  <button class="menu" id="menuButton" aria-label="Open menu">☰</button>
+  <button
+    class="menu"
+    id="menuButton"
+    aria-label="Open menu"
+  >
+    ☰
+  </button>
 
   <nav class="nav" id="mainNav">
+
     <a href="#home">Home</a>
     <a href="#about">About</a>
     <a href="#services">Services</a>
@@ -28,11 +46,13 @@
     <a href="#employers">For Employers</a>
     <a href="#jobs">Jobs</a>
     <a href="#contact">Contact</a>
+
   </nav>
 
-  <button class="nav-button" data-enroll>
+  <a class="nav-button" href="#profile">
     Enroll <span>→</span>
-  </button>
+  </a>
+
 </header>
 
 
@@ -43,15 +63,17 @@
 <section id="home" class="hero">
 
   <div class="hero-background">
+
     <div class="hero-stars"></div>
     <div class="hero-glow"></div>
 
-    <!-- Upload the approved cinematic mountain image to GitHub as hero-mountain.jpg -->
     <div class="hero-mountain"></div>
 
     <div class="hero-orbit orbit-one"></div>
     <div class="hero-orbit orbit-two"></div>
+
   </div>
+
 
   <div class="hero-content">
 
@@ -79,10 +101,10 @@
 
       <div class="hero-actions">
 
-        <button class="btn gold" data-enroll>
+        <a class="btn gold" href="#jobs">
           Explore Opportunities
           <span>→</span>
-        </button>
+        </a>
 
         <a class="btn ghost" href="#profile">
           Submit Your Profile
@@ -92,6 +114,7 @@
       </div>
 
     </div>
+
 
     <div class="hero-message">
       <span>PEOPLE</span>
@@ -161,6 +184,7 @@
 
   </div>
 
+
   <div class="about-cards">
 
     <article>
@@ -211,12 +235,14 @@
   <div class="section-head">
 
     <div>
+
       <p class="eyebrow">OUR CORE SERVICES</p>
 
       <h2>
         Complete
         <em>Technology & Talent Solutions</em>
       </h2>
+
     </div>
 
     <p>
@@ -323,9 +349,9 @@
 
     <div class="candidate-buttons">
 
-      <button class="btn gold" data-enroll>
+      <a class="btn gold" href="#profile">
         Enroll With Us →
-      </button>
+      </a>
 
       <a class="btn ghost" href="#profile">
         Submit Profile →
@@ -377,9 +403,11 @@
       <span class="connection c3"></span>
       <span class="connection c4"></span>
       <span class="connection c5"></span>
+
     </div>
 
   </div>
+
 
   <div class="global-copy">
 
@@ -435,6 +463,7 @@
 
   </div>
 
+
   <div class="employer-grid">
 
     <span>IT Consulting</span>
@@ -466,6 +495,7 @@
 
     </div>
 
+
     <div class="job-search">
 
       <input
@@ -475,9 +505,11 @@
       >
 
       <select id="jobType">
+
         <option value="">All types</option>
         <option value="IT">IT</option>
         <option value="Non-IT">Non-IT</option>
+
       </select>
 
     </div>
@@ -488,35 +520,58 @@
   <div id="jobList" class="job-list">
 
     <article data-role="business analyst it">
+
       <div>
         <strong>Business Analyst</strong>
         <span>US • IT • Full-time</span>
       </div>
-      <a href="#profile">Apply →</a>
+
+      <a href="#profile" data-job="Business Analyst">
+        Apply →
+      </a>
+
     </article>
 
+
     <article data-role="data analyst it">
+
       <div>
         <strong>Data Analyst</strong>
         <span>US • IT • Full-time</span>
       </div>
-      <a href="#profile">Apply →</a>
+
+      <a href="#profile" data-job="Data Analyst">
+        Apply →
+      </a>
+
     </article>
 
+
     <article data-role="recruiting coordinator non-it">
+
       <div>
         <strong>Recruiting Coordinator</strong>
         <span>US • Non-IT • Full-time</span>
       </div>
-      <a href="#profile">Apply →</a>
+
+      <a href="#profile" data-job="Recruiting Coordinator">
+        Apply →
+      </a>
+
     </article>
 
+
     <article data-role="operations analyst it">
+
       <div>
         <strong>Operations Analyst</strong>
         <span>US • IT • Contract</span>
       </div>
-      <a href="#profile">Apply →</a>
+
+      <a href="#profile" data-job="Operations Analyst">
+        Apply →
+      </a>
+
     </article>
 
   </div>
@@ -530,7 +585,7 @@
 
   <div class="form-intro">
 
-    <p class="eyebrow">SUBMIT YOUR PROFILE</p>
+    <p class="eyebrow">JOIN MOUNTPEAK</p>
 
     <h2>
       Take the first step toward your
@@ -551,17 +606,42 @@
 
   <form
     id="candidateForm"
-    action="https://formsubmit.co/suvankar45@gmail.com"
+    action="https://formsubmit.co/hr@mountpeakgroup.com"
     method="POST"
     enctype="multipart/form-data"
   >
 
-    <input type="hidden" name="_subject"
-      value="New MountPeak Group Candidate Profile">
+    <input
+      type="hidden"
+      name="_subject"
+      value="New MountPeak Group Candidate Profile"
+    >
 
-    <input type="hidden" name="_captcha" value="false">
+    <input
+      type="hidden"
+      name="_captcha"
+      value="false"
+    >
 
-    <input type="hidden" name="_template" value="table">
+    <input
+      type="hidden"
+      name="_template"
+      value="table"
+    >
+
+    <input
+      type="hidden"
+      name="Application Type"
+      value="General Candidate Profile"
+    >
+
+    <input
+      type="hidden"
+      id="selectedJob"
+      name="Applied Job"
+      value=""
+    >
+
 
     <div class="form-grid">
 
@@ -570,49 +650,69 @@
         <input name="Full Name" required>
       </label>
 
+
       <label>
         Email Address *
-        <input type="email" name="Email" required>
+        <input
+          type="email"
+          name="Email"
+          required
+        >
       </label>
+
 
       <label>
         Phone Number *
         <input name="Phone" required>
       </label>
 
+
       <label>
         Current Location *
-        <input name="Current Location" required>
+        <input
+          name="Current Location"
+          required
+        >
       </label>
+
 
       <label>
         Education
         <input name="Education">
       </label>
 
+
       <label>
         Specialization
         <input name="Specialization">
       </label>
+
 
       <label>
         Experience
         <input name="Experience">
       </label>
 
+
       <label>
         Preferred Role
         <input name="Preferred Role">
       </label>
+
 
       <label>
         Preferred Location
         <input name="Preferred Location">
       </label>
 
+
       <label>
         Work Authorization *
-        <select name="Work Authorization" required>
+        <select
+          name="Work Authorization"
+          required
+        >
+
           <option value="">Select</option>
           <option>US Citizen</option>
           <option>Green Card</option>
@@ -622,32 +722,54 @@
           <option>OPT</option>
           <option>STEM OPT</option>
           <option>Other</option>
+
         </select>
       </label>
 
-      <label class="full">
-        Key Skills / Technologies
-        <textarea name="Skills" rows="4"></textarea>
-      </label>
 
       <label class="full">
+        Key Skills / Technologies
+
+        <textarea
+          name="Skills"
+          rows="4"
+        ></textarea>
+
+      </label>
+
+
+      <label class="full">
+
         Upload Resume *
+
         <input
           type="file"
           name="Resume"
           accept=".pdf,.doc,.docx"
           required
         >
+
       </label>
 
+
       <label class="full">
+
         Additional Notes
-        <textarea name="Notes" rows="4"></textarea>
+
+        <textarea
+          name="Notes"
+          rows="4"
+        ></textarea>
+
       </label>
 
     </div>
 
-    <button class="btn gold" type="submit">
+
+    <button
+      class="btn gold"
+      type="submit"
+    >
       Submit Profile →
     </button>
 
@@ -656,13 +778,15 @@
 </section>
 
 
-<!-- ================= ENROLL / PAYMENT CTA ================= -->
+<!-- ================= JOIN BANNER ================= -->
 
 <section class="enroll-banner">
 
   <div>
 
-    <p class="eyebrow">READY FOR YOUR NEXT PEAK?</p>
+    <p class="eyebrow">
+      READY FOR YOUR NEXT PEAK?
+    </p>
 
     <h2>
       Start your journey
@@ -670,15 +794,19 @@
     </h2>
 
     <p>
-      Complete your enrollment details and continue
-      securely to your selected payment method.
+      Share your professional profile with our team
+      and explore opportunities aligned with your goals.
     </p>
 
   </div>
 
-  <button class="btn gold" data-enroll>
-    Enroll With Us →
-  </button>
+
+  <a
+    class="btn gold"
+    href="#profile"
+  >
+    Join MountPeak →
+  </a>
 
 </section>
 
@@ -701,32 +829,46 @@
       business solutions? Our team is ready to connect.
     </p>
 
+
     <div class="contact-details">
-      <span>✉ suvankar45@gmail.com</span>
-      <span>🌎 Global Technology & Talent Solutions</span>
+
+      <span>
+        ✉ hr@mountpeakgroup.com
+      </span>
+
+      <span>
+        🌎 Global Technology & Talent Solutions
+      </span>
+
     </div>
 
   </div>
 
 
   <form
-    action="https://formsubmit.co/suvankar45@gmail.com"
+    action="https://formsubmit.co/hr@mountpeakgroup.com"
     method="POST"
   >
 
-    <input type="hidden"
+    <input
+      type="hidden"
       name="_subject"
-      value="New MountPeak Group Contact Inquiry">
+      value="New MountPeak Group Contact Inquiry"
+    >
 
-    <input type="hidden"
+    <input
+      type="hidden"
       name="_captcha"
-      value="false">
+      value="false"
+    >
+
 
     <input
       name="Full Name"
       placeholder="Full Name *"
       required
     >
+
 
     <input
       type="email"
@@ -735,10 +877,12 @@
       required
     >
 
+
     <input
       name="Phone"
       placeholder="Phone Number"
     >
+
 
     <textarea
       name="Message"
@@ -746,7 +890,11 @@
       rows="5"
     ></textarea>
 
-    <button class="btn gold" type="submit">
+
+    <button
+      class="btn gold"
+      type="submit"
+    >
       Send Message →
     </button>
 
@@ -763,12 +911,17 @@
 
   <div class="footer-main">
 
-    <a class="brand footer-brand" href="#home">
+    <a
+      class="brand footer-brand"
+      href="#home"
+    >
+
       <img
         class="brand-logo"
         src="logo.png"
         alt="MountPeak Group"
       >
+
     </a>
 
     <p>
@@ -795,7 +948,7 @@
     <strong>For Talent</strong>
 
     <a href="#profile">Submit Profile</a>
-    <button data-enroll>Enroll With Us</button>
+    <a href="#profile">Join MountPeak</a>
 
   </div>
 
@@ -812,144 +965,12 @@
 
 
   <div class="copyright">
+
     © 2026 MountPeak Group. All Rights Reserved.
+
   </div>
 
 </footer>
-
-
-<!-- ================= ENROLL MODAL ================= -->
-
-<div
-  class="enroll-modal"
-  id="enrollModal"
-  aria-hidden="true"
->
-
-  <div class="enroll-card">
-
-    <button
-      class="enroll-close"
-      id="enrollClose"
-      aria-label="Close"
-    >
-      ×
-    </button>
-
-    <p class="eyebrow">MOUNTPEAK GROUP</p>
-
-    <h2>
-      Enroll
-      <em>With Us.</em>
-    </h2>
-
-    <p class="enroll-subtitle">
-      Complete your details below to continue.
-    </p>
-
-
-    <form id="enrollForm">
-
-      <div class="enroll-grid">
-
-        <label>
-          Full Name *
-          <input name="enroll_name" required>
-        </label>
-
-        <label>
-          Email *
-          <input
-            type="email"
-            name="enroll_email"
-            required
-          >
-        </label>
-
-        <label>
-          Contact Number *
-          <div class="phone-row">
-            <select name="country_code" aria-label="Country code">
-              <option value="+1">+1 US</option>
-              <option value="+91">+91 IN</option>
-              <option value="+44">+44 UK</option>
-              <option value="+61">+61 AU</option>
-              <option value="+971">+971 UAE</option>
-              <option value="+65">+65 SG</option>
-            </select>
-            <input name="enroll_phone" required>
-          </div>
-        </label>
-
-        <label>
-          Alternative Number
-          <input name="alternative_phone">
-        </label>
-
-        <label class="full">
-          Street Address *
-          <input name="street_address" required>
-        </label>
-
-        <label>
-          Apt / Suite
-          <input name="apt">
-        </label>
-
-        <label>
-          City *
-          <input name="city" required>
-        </label>
-
-        <label>
-          State *
-          <input name="state" required>
-        </label>
-
-        <label>
-          ZIP Code *
-          <input name="zip" required>
-        </label>
-
-        <label>
-          Country *
-          <input name="country" value="United States" required>
-        </label>
-
-        <label class="full">
-          Enrollment Amount (USD) *
-          <div class="amount-input">
-            <span>$</span>
-            <input
-              id="enrollAmount"
-              name="amount"
-              type="number"
-              min="1"
-              step="0.01"
-              placeholder="Enter agreed amount"
-              required
-            >
-          </div>
-        </label>
-
-      </div>
-
-      <button
-        class="btn gold enroll-submit"
-        type="submit"
-      >
-        Continue to Payment →
-      </button>
-
-      <p class="enroll-note">
-        Amounts are processed in USD.
-      </p>
-
-    </form>
-
-  </div>
-
-</div>
 
 
 <!-- ================= AI NAVIGATION ================= -->
@@ -963,17 +984,21 @@
     ✦
   </button>
 
+
   <div
     class="ai-panel"
     id="aiPanel"
     hidden
   >
 
-    <strong>MountPeak AI</strong>
+    <strong>
+      MountPeak AI
+    </strong>
 
     <p>
       Where would you like to go?
     </p>
+
 
     <div class="ai-links">
 
@@ -993,11 +1018,12 @@
         Contact
       </button>
 
-      <button data-enroll>
-        Enroll
+      <button data-go="#profile">
+        Join MountPeak
       </button>
 
     </div>
+
 
     <small>
       MountPeak digital navigation assistant.
@@ -1019,6 +1045,7 @@
   >
     ✦
   </button>
+
 
   <div
     id="chatBox"
@@ -1069,8 +1096,8 @@
         Services
       </button>
 
-      <button data-chat="How can I enroll?">
-        Enroll
+      <button data-chat="How can I join MountPeak?">
+        Join MountPeak
       </button>
 
     </div>
@@ -1093,6 +1120,7 @@
   </div>
 
 </div>
+
 
 </body>
 </html>
