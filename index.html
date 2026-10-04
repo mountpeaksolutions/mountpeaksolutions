@@ -13,6 +13,7 @@
 
 <link rel="stylesheet" href="style.css">
 <script defer src="app.js"></script>
+
 </head>
 
 <body>
@@ -66,7 +67,6 @@
 
     <div class="hero-stars"></div>
     <div class="hero-glow"></div>
-
     <div class="hero-mountain"></div>
 
     <div class="hero-orbit orbit-one"></div>
@@ -604,36 +604,13 @@
   </div>
 
 
+  <!-- NO FORMSUBMIT HERE.
+       APPLICATIONS ARE SAVED DIRECTLY TO SUPABASE. -->
+
   <form
     id="candidateForm"
-    action="https://formsubmit.co/hr@mountpeakgroup.com"
-    method="POST"
     enctype="multipart/form-data"
   >
-
-    <input
-      type="hidden"
-      name="_subject"
-      value="New MountPeak Group Candidate Profile"
-    >
-
-    <input
-      type="hidden"
-      name="_captcha"
-      value="false"
-    >
-
-    <input
-      type="hidden"
-      name="_template"
-      value="table"
-    >
-
-    <input
-      type="hidden"
-      name="Application Type"
-      value="General Candidate Profile"
-    >
 
     <input
       type="hidden"
@@ -647,13 +624,19 @@
 
       <label>
         Full Name *
-        <input name="Full Name" required>
+        <input
+          id="candidateFullName"
+          name="Full Name"
+          type="text"
+          required
+        >
       </label>
 
 
       <label>
         Email Address *
         <input
+          id="candidateEmail"
           type="email"
           name="Email"
           required
@@ -663,14 +646,21 @@
 
       <label>
         Phone Number *
-        <input name="Phone" required>
+        <input
+          id="candidatePhone"
+          type="tel"
+          name="Phone"
+          required
+        >
       </label>
 
 
       <label>
         Current Location *
         <input
+          id="candidateLocation"
           name="Current Location"
+          type="text"
           required
         >
       </label>
@@ -678,42 +668,66 @@
 
       <label>
         Education
-        <input name="Education">
+        <input
+          id="candidateEducation"
+          name="Education"
+          type="text"
+        >
       </label>
 
 
       <label>
         Specialization
-        <input name="Specialization">
+        <input
+          id="candidateSpecialization"
+          name="Specialization"
+          type="text"
+        >
       </label>
 
 
       <label>
         Experience
-        <input name="Experience">
+        <input
+          id="candidateExperience"
+          name="Experience"
+          type="text"
+        >
       </label>
 
 
       <label>
         Preferred Role
-        <input name="Preferred Role">
+        <input
+          id="candidatePreferredRole"
+          name="Preferred Role"
+          type="text"
+        >
       </label>
 
 
       <label>
         Preferred Location
-        <input name="Preferred Location">
+        <input
+          id="candidatePreferredLocation"
+          name="Preferred Location"
+          type="text"
+        >
       </label>
 
 
       <label>
         Work Authorization *
         <select
+          id="candidateWorkAuthorization"
           name="Work Authorization"
           required
         >
 
-          <option value="">Select</option>
+          <option value="">
+            Select
+          </option>
+
           <option>US Citizen</option>
           <option>Green Card</option>
           <option>H-1B</option>
@@ -731,6 +745,7 @@
         Key Skills / Technologies
 
         <textarea
+          id="candidateSkills"
           name="Skills"
           rows="4"
         ></textarea>
@@ -743,6 +758,7 @@
         Upload Resume *
 
         <input
+          id="candidateResume"
           type="file"
           name="Resume"
           accept=".pdf,.doc,.docx"
@@ -757,6 +773,7 @@
         Additional Notes
 
         <textarea
+          id="candidateNotes"
           name="Notes"
           rows="4"
         ></textarea>
@@ -767,11 +784,27 @@
 
 
     <button
+      id="candidateSubmitBtn"
       class="btn gold"
       type="submit"
     >
       Submit Profile →
     </button>
+
+
+    <div
+      id="candidateFormMessage"
+      style="
+        display:none;
+        margin-top:18px;
+        padding:14px 16px;
+        border-radius:12px;
+        border:1px solid rgba(255,255,255,.12);
+        background:rgba(255,255,255,.04);
+        color:#dddbea;
+        font-size:14px;
+      "
+    ></div>
 
   </form>
 
@@ -1120,6 +1153,442 @@
   </div>
 
 </div>
+
+
+<!-- =====================================================
+     SUPABASE
+     ===================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+(function(){
+
+  "use strict";
+
+
+  /* =====================================================
+     SUPABASE CONFIG
+     ===================================================== */
+
+  const SUPABASE_URL =
+    "https://yuarhxkntaojgkecwprp.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_WVtRsGn1bzVBRdKi8u3_Tg__ga54oRd";
+
+
+  const { createClient } = window.supabase;
+
+  const db = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+  /* =====================================================
+     ELEMENTS
+     ===================================================== */
+
+  const form =
+    document.getElementById("candidateForm");
+
+  const submitButton =
+    document.getElementById("candidateSubmitBtn");
+
+  const message =
+    document.getElementById("candidateFormMessage");
+
+  const selectedJob =
+    document.getElementById("selectedJob");
+
+
+  /* =====================================================
+     MESSAGE
+     ===================================================== */
+
+  function showFormMessage(text, success){
+
+    message.textContent = text;
+
+    message.style.display = "block";
+
+    if(success){
+
+      message.style.color = "#9ce5bd";
+
+      message.style.borderColor =
+        "rgba(93,220,153,.30)";
+
+      message.style.background =
+        "rgba(93,220,153,.07)";
+
+    }else{
+
+      message.style.color = "#ffb2b2";
+
+      message.style.borderColor =
+        "rgba(255,100,100,.30)";
+
+      message.style.background =
+        "rgba(255,100,100,.07)";
+
+    }
+
+  }
+
+
+  /* =====================================================
+     SAFE FILE NAME
+     ===================================================== */
+
+  function safeFileName(name){
+
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9._-]/g,"-")
+      .replace(/-+/g,"-");
+
+  }
+
+
+  /* =====================================================
+     SUBMIT APPLICATION
+     ===================================================== */
+
+  form.addEventListener("submit", async function(event){
+
+    event.preventDefault();
+
+
+    message.style.display = "none";
+
+    submitButton.disabled = true;
+
+    submitButton.textContent =
+      "Submitting Profile...";
+
+
+    try{
+
+      /* ---------- GET FORM VALUES ---------- */
+
+      const fullName =
+        document
+          .getElementById("candidateFullName")
+          .value
+          .trim();
+
+      const email =
+        document
+          .getElementById("candidateEmail")
+          .value
+          .trim();
+
+      const phone =
+        document
+          .getElementById("candidatePhone")
+          .value
+          .trim();
+
+      const currentLocation =
+        document
+          .getElementById("candidateLocation")
+          .value
+          .trim();
+
+      const education =
+        document
+          .getElementById("candidateEducation")
+          .value
+          .trim();
+
+      const specialization =
+        document
+          .getElementById("candidateSpecialization")
+          .value
+          .trim();
+
+      const experience =
+        document
+          .getElementById("candidateExperience")
+          .value
+          .trim();
+
+      const preferredRole =
+        document
+          .getElementById("candidatePreferredRole")
+          .value
+          .trim();
+
+      const preferredLocation =
+        document
+          .getElementById("candidatePreferredLocation")
+          .value
+          .trim();
+
+      const workAuthorization =
+        document
+          .getElementById("candidateWorkAuthorization")
+          .value;
+
+      const skills =
+        document
+          .getElementById("candidateSkills")
+          .value
+          .trim();
+
+      const notes =
+        document
+          .getElementById("candidateNotes")
+          .value
+          .trim();
+
+      const appliedJob =
+        selectedJob.value.trim();
+
+
+      /* ---------- RESUME ---------- */
+
+      const resumeInput =
+        document.getElementById("candidateResume");
+
+      const resume =
+        resumeInput.files[0];
+
+
+      if(!resume){
+
+        throw new Error(
+          "Please upload your resume."
+        );
+
+      }
+
+
+      /* ---------- FILE TYPE ---------- */
+
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ];
+
+
+      if(
+        !allowedTypes.includes(resume.type)
+      ){
+
+        throw new Error(
+          "Please upload a PDF, DOC or DOCX resume."
+        );
+
+      }
+
+
+      /* ---------- FILE SIZE ---------- */
+
+      if(resume.size > 10 * 1024 * 1024){
+
+        throw new Error(
+          "Resume must be 10 MB or smaller."
+        );
+
+      }
+
+
+      /* =================================================
+         UNIQUE RESUME PATH
+         ================================================= */
+
+      const timestamp =
+        Date.now();
+
+      const random =
+        Math.random()
+          .toString(36)
+          .substring(2,9);
+
+      const fileName =
+        safeFileName(resume.name);
+
+      const resumePath =
+        "candidates/" +
+        timestamp +
+        "-" +
+        random +
+        "-" +
+        fileName;
+
+
+      /* =================================================
+         UPLOAD RESUME
+         ================================================= */
+
+      submitButton.textContent =
+        "Uploading Resume...";
+
+
+      const {
+        error: uploadError
+      } = await db.storage
+        .from("resumes")
+        .upload(
+          resumePath,
+          resume,
+          {
+            cacheControl:"3600",
+            upsert:false
+          }
+        );
+
+
+      if(uploadError){
+
+        throw uploadError;
+
+      }
+
+
+      /* =================================================
+         SAVE APPLICATION
+         ================================================= */
+
+      submitButton.textContent =
+        "Saving Application...";
+
+
+      const {
+        error: insertError
+      } = await db
+        .from("applications")
+        .insert({
+
+          full_name: fullName,
+
+          email: email,
+
+          phone: phone,
+
+          applied_job:
+            appliedJob || "General Profile",
+
+          resume_path:
+            resumePath,
+
+          current_location:
+            currentLocation,
+
+          education:
+            education,
+
+          specialization:
+            specialization,
+
+          experience:
+            experience,
+
+          preferred_role:
+            preferredRole,
+
+          preferred_location:
+            preferredLocation,
+
+          work_authorization:
+            workAuthorization,
+
+          skills:
+            skills,
+
+          notes:
+            notes,
+
+          status:
+            "New"
+
+        });
+
+
+      if(insertError){
+
+        /* If database insert fails,
+           remove uploaded resume. */
+
+        await db.storage
+          .from("resumes")
+          .remove([resumePath]);
+
+        throw insertError;
+
+      }
+
+
+      /* =================================================
+         SUCCESS
+         ================================================= */
+
+      showFormMessage(
+        "Your profile has been submitted successfully. Our MountPeak Group team will review your information and contact you if there is a relevant opportunity.",
+        true
+      );
+
+
+      form.reset();
+
+      selectedJob.value = "";
+
+
+      submitButton.textContent =
+        "Profile Submitted ✓";
+
+
+      /* Scroll message into view */
+
+      message.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+      });
+
+
+      setTimeout(function(){
+
+        submitButton.disabled = false;
+
+        submitButton.textContent =
+          "Submit Profile →";
+
+      },4000);
+
+
+    }catch(error){
+
+      console.error(
+        "MountPeak application error:",
+        error
+      );
+
+
+      showFormMessage(
+        "We could not submit your profile right now. Please try again. " +
+        (error.message || ""),
+        false
+      );
+
+
+      submitButton.disabled = false;
+
+      submitButton.textContent =
+        "Submit Profile →";
+
+    }
+
+  });
+
+
+})();
+
+</script>
 
 
 </body>
