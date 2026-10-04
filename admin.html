@@ -1,32 +1,1738 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MountPeak Group Admin</title><link rel="stylesheet" href="style.css"></head><body><main class="section"><p class="eyebrow">MOUNTPEAK GROUP</p><h1 style="font-family:Manrope">Admin Dashboard</h1><p style="color:var(--muted);max-width:650px;line-height:1.7">This frontend dashboard is a visual/admin shell. Candidate submissions and payment transaction records will be populated from the backend once it is deployed.</p><div class="cards" style="margin-top:30px"><article><b>CANDIDATES</b><h3>Awaiting backend</h3><p>Candidate records will appear here after database integration.</p></article><article><b>PAYMENTS</b><h3>Awaiting gateway</h3><p>Successful transactions and payment status will appear here after gateway integration.</p></article><article><b>CONTACTS</b><h3>Awaiting backend</h3><p>Contact enquiries will be listed here after backend connection.</p></article></div><a class="btn navy" style="margin-top:25px" href="index.html">← Back to MountPeak Group</a></main><!-- Supabase Admin Security -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>MountPeak Group | Admin Dashboard</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* =====================================================
+       MOUNTPEAK ADMIN DASHBOARD
+       ===================================================== */
+
+    .admin-page{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 80% 10%,rgba(111,60,255,.12),transparent 28%),
+        #070713;
+    }
+
+    .admin-shell{
+      width:min(1400px,94%);
+      margin:auto;
+      padding:35px 0 70px;
+    }
+
+    .admin-topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:22px 25px;
+      margin-bottom:25px;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:rgba(255,255,255,.035);
+      backdrop-filter:blur(15px);
+    }
+
+    .admin-brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .admin-brand img{
+      width:135px;
+      max-height:50px;
+      object-fit:contain;
+    }
+
+    .admin-brand-text small{
+      display:block;
+      color:var(--gold-2);
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:2px;
+    }
+
+    .admin-brand-text strong{
+      display:block;
+      margin-top:3px;
+      font-size:20px;
+    }
+
+    .admin-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .admin-btn{
+      min-height:42px;
+      padding:10px 17px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.045);
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .admin-btn:hover{
+      border-color:rgba(232,196,119,.45);
+      color:var(--gold-2);
+    }
+
+    .admin-btn.gold{
+      background:linear-gradient(135deg,var(--gold-2),var(--gold));
+      color:#090812;
+      border:0;
+    }
+
+    .admin-btn.danger{
+      color:#ff9c9c;
+    }
+
+    .admin-welcome{
+      margin-bottom:25px;
+    }
+
+    .admin-welcome h1{
+      margin:0;
+      font-size:clamp(35px,5vw,58px);
+      line-height:1;
+    }
+
+    .admin-welcome p{
+      max-width:750px;
+      color:var(--muted);
+      margin-top:15px;
+    }
+
+    /* ---------- STATS ---------- */
+
+    .admin-stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:15px;
+      margin-bottom:25px;
+    }
+
+    .admin-stat{
+      padding:24px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:var(--card);
+    }
+
+    .admin-stat small{
+      display:block;
+      color:var(--muted-2);
+      text-transform:uppercase;
+      letter-spacing:1.5px;
+      font-size:10px;
+      font-weight:800;
+    }
+
+    .admin-stat strong{
+      display:block;
+      margin-top:8px;
+      color:var(--gold-2);
+      font-size:34px;
+    }
+
+    /* ---------- TABS ---------- */
+
+    .admin-tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom:20px;
+      padding:7px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,.025);
+      overflow:auto;
+    }
+
+    .admin-tab{
+      border:0;
+      border-radius:11px;
+      padding:12px 20px;
+      background:transparent;
+      color:#aaa8bb;
+      font-weight:800;
+      white-space:nowrap;
+      cursor:pointer;
+    }
+
+    .admin-tab.active{
+      background:rgba(232,196,119,.12);
+      color:var(--gold-2);
+    }
+
+    .admin-panel{
+      display:none;
+    }
+
+    .admin-panel.active{
+      display:block;
+    }
+
+    /* ---------- PANEL ---------- */
+
+    .admin-card{
+      padding:25px;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:rgba(255,255,255,.035);
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+
+    .admin-card-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      margin-bottom:20px;
+    }
+
+    .admin-card-header h2{
+      margin:0;
+      font-size:24px;
+    }
+
+    .admin-card-header p{
+      margin:5px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* ---------- JOB FORM ---------- */
+
+    .job-form{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:16px;
+    }
+
+    .job-form .full{
+      grid-column:1/-1;
+    }
+
+    .admin-field label{
+      display:block;
+      margin-bottom:7px;
+      color:#dddbea;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .admin-field input,
+    .admin-field select,
+    .admin-field textarea{
+      width:100%;
+      padding:13px 14px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#11101c;
+      color:white;
+      outline:none;
+    }
+
+    .admin-field textarea{
+      min-height:140px;
+      resize:vertical;
+    }
+
+    .admin-field input:focus,
+    .admin-field select:focus,
+    .admin-field textarea:focus{
+      border-color:rgba(232,196,119,.55);
+    }
+
+    .job-form-actions{
+      grid-column:1/-1;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    /* ---------- JOB TABLE ---------- */
+
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    .admin-table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:760px;
+    }
+
+    .admin-table th{
+      padding:14px;
+      text-align:left;
+      color:var(--gold-2);
+      font-size:11px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      border-bottom:1px solid var(--line);
+    }
+
+    .admin-table td{
+      padding:15px 14px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      color:#dddbea;
+      font-size:13px;
+      vertical-align:middle;
+    }
+
+    .admin-table tr:hover td{
+      background:rgba(255,255,255,.018);
+    }
+
+    .status{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:10px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.7px;
+    }
+
+    .status.published{
+      color:#9ce5bd;
+      background:rgba(93,220,153,.08);
+      border:1px solid rgba(93,220,153,.20);
+    }
+
+    .status.draft{
+      color:#bbb7ca;
+      background:rgba(255,255,255,.05);
+    }
+
+    .status.closed{
+      color:#ffb2b2;
+      background:rgba(255,100,100,.08);
+    }
+
+    .row-actions{
+      display:flex;
+      gap:7px;
+      flex-wrap:wrap;
+    }
+
+    .small-btn{
+      padding:7px 10px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:#11101c;
+      color:#dddbea;
+      font-size:11px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .small-btn:hover{
+      border-color:rgba(232,196,119,.4);
+      color:var(--gold-2);
+    }
+
+    .small-btn.delete:hover{
+      border-color:rgba(255,100,100,.45);
+      color:#ff9c9c;
+    }
+
+    /* ---------- APPLICATION CARDS ---------- */
+
+    .application-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:15px;
+    }
+
+    .application-card{
+      padding:22px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .application-card h3{
+      margin:0;
+      font-size:18px;
+    }
+
+    .application-job{
+      margin-top:5px;
+      color:var(--gold-2);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .application-meta{
+      margin-top:16px;
+      display:grid;
+      gap:7px;
+    }
+
+    .application-meta div{
+      color:#aaa8bb;
+      font-size:12px;
+    }
+
+    .application-meta strong{
+      color:#dddbea;
+    }
+
+    .application-actions{
+      display:flex;
+      gap:8px;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .empty-state{
+      padding:50px 20px;
+      text-align:center;
+      color:var(--muted);
+      border:1px dashed var(--line);
+      border-radius:18px;
+    }
+
+    .loading{
+      color:var(--muted);
+      padding:25px 0;
+    }
+
+    .admin-message{
+      display:none;
+      margin-bottom:18px;
+      padding:13px 15px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:#dddbea;
+      font-size:13px;
+    }
+
+    .admin-message.show{
+      display:block;
+    }
+
+    .admin-message.error{
+      border-color:rgba(255,100,100,.30);
+      color:#ffb2b2;
+    }
+
+    .admin-message.success{
+      border-color:rgba(93,220,153,.25);
+      color:#9ce5bd;
+    }
+
+    /* ---------- MOBILE ---------- */
+
+    @media(max-width:900px){
+
+      .admin-stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .application-grid{
+        grid-template-columns:1fr;
+      }
+
+    }
+
+    @media(max-width:650px){
+
+      .admin-shell{
+        width:92%;
+        padding-top:20px;
+      }
+
+      .admin-topbar{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .admin-actions{
+        width:100%;
+      }
+
+      .admin-actions .admin-btn{
+        flex:1;
+      }
+
+      .admin-stats{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .job-form{
+        grid-template-columns:1fr;
+      }
+
+      .job-form .full{
+        grid-column:auto;
+      }
+
+      .job-form-actions{
+        grid-column:auto;
+      }
+
+      .admin-card{
+        padding:18px;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="admin-page">
+
+  <div class="admin-shell">
+
+    <!-- =================================================
+         TOP BAR
+         ================================================= -->
+
+    <header class="admin-topbar">
+
+      <div class="admin-brand">
+
+        <img src="logo.png" alt="MountPeak Group">
+
+        <div class="admin-brand-text">
+          <small>MOUNTPEAK GROUP</small>
+          <strong>Admin Control Center</strong>
+        </div>
+
+      </div>
+
+      <div class="admin-actions">
+
+        <button class="admin-btn" id="refreshBtn">
+          ↻ Refresh
+        </button>
+
+        <a class="admin-btn" href="index.html">
+          View Website
+        </a>
+
+        <button class="admin-btn danger" id="logoutBtn">
+          Logout
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- =================================================
+         WELCOME
+         ================================================= -->
+
+    <section class="admin-welcome">
+
+      <p class="eyebrow">MOUNTPEAK GROUP • PRIVATE ADMIN</p>
+
+      <h1>Admin Dashboard</h1>
+
+      <p>
+        Manage jobs, review candidate applications and control
+        the MountPeak Group recruitment portal from one place.
+      </p>
+
+    </section>
+
+
+    <!-- =================================================
+         MESSAGE
+         ================================================= -->
+
+    <div id="adminMessage" class="admin-message"></div>
+
+
+    <!-- =================================================
+         STATS
+         ================================================= -->
+
+    <section class="admin-stats">
+
+      <article class="admin-stat">
+        <small>Total Jobs</small>
+        <strong id="totalJobs">0</strong>
+      </article>
+
+      <article class="admin-stat">
+        <small>Published Jobs</small>
+        <strong id="publishedJobs">0</strong>
+      </article>
+
+      <article class="admin-stat">
+        <small>Applications</small>
+        <strong id="totalApplications">0</strong>
+      </article>
+
+      <article class="admin-stat">
+        <small>Open Jobs</small>
+        <strong id="openJobs">0</strong>
+      </article>
+
+    </section>
+
+
+    <!-- =================================================
+         TABS
+         ================================================= -->
+
+    <nav class="admin-tabs">
+
+      <button class="admin-tab active" data-panel="jobsPanel">
+        💼 Jobs
+      </button>
+
+      <button class="admin-tab" data-panel="applicationsPanel">
+        📋 Applications
+      </button>
+
+    </nav>
+
+
+    <!-- =================================================
+         JOBS PANEL
+         ================================================= -->
+
+    <section id="jobsPanel" class="admin-panel active">
+
+      <!-- ADD / EDIT JOB -->
+
+      <article class="admin-card">
+
+        <div class="admin-card-header">
+
+          <div>
+            <h2 id="jobFormTitle">Post New Job</h2>
+
+            <p>
+              Create and publish a new opportunity on MountPeak Group.
+            </p>
+          </div>
+
+        </div>
+
+
+        <form id="jobForm" class="job-form">
+
+          <input type="hidden" id="jobId">
+
+
+          <div class="admin-field">
+
+            <label for="jobTitle">
+              Job Title
+            </label>
+
+            <input
+              id="jobTitle"
+              type="text"
+              placeholder="e.g. Business Analyst"
+              required
+            >
+
+          </div>
+
+
+          <div class="admin-field">
+
+            <label for="jobLocation">
+              Location
+            </label>
+
+            <input
+              id="jobLocation"
+              type="text"
+              placeholder="e.g. Boston, MA / Remote"
+              required
+            >
+
+          </div>
+
+
+          <div class="admin-field">
+
+            <label for="jobType">
+              Job Type
+            </label>
+
+            <select id="jobType" required>
+
+              <option value="">
+                Select job type
+              </option>
+
+              <option value="Full-Time">
+                Full-Time
+              </option>
+
+              <option value="Part-Time">
+                Part-Time
+              </option>
+
+              <option value="Contract">
+                Contract
+              </option>
+
+              <option value="Remote">
+                Remote
+              </option>
+
+              <option value="Hybrid">
+                Hybrid
+              </option>
+
+              <option value="Internship">
+                Internship
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="admin-field">
+
+            <label for="jobStatus">
+              Status
+            </label>
+
+            <select id="jobStatus">
+
+              <option value="published">
+                Published
+              </option>
+
+              <option value="draft">
+                Draft
+              </option>
+
+              <option value="closed">
+                Closed
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="admin-field full">
+
+            <label for="jobDescription">
+              Job Description
+            </label>
+
+            <textarea
+              id="jobDescription"
+              placeholder="Describe responsibilities, requirements and qualifications..."
+              required
+            ></textarea>
+
+          </div>
+
+
+          <div class="job-form-actions">
+
+            <button
+              class="admin-btn gold"
+              type="submit"
+              id="saveJobBtn"
+            >
+              + Publish Job
+            </button>
+
+            <button
+              class="admin-btn"
+              type="button"
+              id="cancelEditBtn"
+              style="display:none"
+            >
+              Cancel Edit
+            </button>
+
+          </div>
+
+        </form>
+
+      </article>
+
+
+      <!-- JOB LIST -->
+
+      <article class="admin-card">
+
+        <div class="admin-card-header">
+
+          <div>
+            <h2>Job Management</h2>
+
+            <p>
+              Edit, publish, close or remove job listings.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+          <table class="admin-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Job</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="jobsTableBody">
+
+              <tr>
+                <td colspan="6">
+                  <div class="loading">
+                    Loading jobs...
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- =================================================
+         APPLICATIONS PANEL
+         ================================================= -->
+
+    <section
+      id="applicationsPanel"
+      class="admin-panel"
+    >
+
+      <article class="admin-card">
+
+        <div class="admin-card-header">
+
+          <div>
+            <h2>Candidate Applications</h2>
+
+            <p>
+              Review candidates who applied through the MountPeak website.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div id="applicationsContainer">
+
+          <div class="loading">
+            Loading applications...
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SUPABASE
+     ===================================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
-const SUPABASE_URL = "https://yuarhxkntaojgkecwprp.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WVtRsGn1bzVBRdKi8u3_Tg__ga54oRd";
+
+const SUPABASE_URL =
+  "https://yuarhxkntaojgkecwprp.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_WVtRsGn1bzVBRdKi8u3_Tg__ga54oRd";
 
 const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-(async () => {
+const db = createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
+
+const messageBox =
+  document.getElementById("adminMessage");
+
+const jobsTableBody =
+  document.getElementById("jobsTableBody");
+
+const applicationsContainer =
+  document.getElementById("applicationsContainer");
+
+
+/* =====================================================
+   MESSAGE
+   ===================================================== */
+
+function showMessage(message, type = ""){
+
+  messageBox.textContent = message;
+
+  messageBox.className =
+    "admin-message show " + type;
+
+  setTimeout(() => {
+
+    messageBox.className =
+      "admin-message";
+
+  }, 4500);
+
+}
+
+
+/* =====================================================
+   ADMIN SECURITY
+   ===================================================== */
+
+async function checkAdmin(){
+
   const {
-    data: { session }
+    data: {
+      session
+    }
   } = await db.auth.getSession();
 
-  if (!session) {
-    window.location.href = "admin-login.html";
-    return;
+  if(!session){
+
+    window.location.href =
+      "admin-login.html";
+
+    return false;
   }
 
-  const { data: admin, error } = await db
+
+  const {
+    data: admin,
+    error
+  } = await db
     .from("admin_users")
     .select("user_id")
     .eq("user_id", session.user.id)
     .maybeSingle();
 
-  if (error || !admin) {
+
+  if(error || !admin){
+
     await db.auth.signOut();
-    window.location.href = "admin-login.html";
+
+    window.location.href =
+      "admin-login.html";
+
+    return false;
   }
+
+  return true;
+}
+
+
+/* =====================================================
+   LOAD JOBS
+   ===================================================== */
+
+async function loadJobs(){
+
+  jobsTableBody.innerHTML = `
+    <tr>
+      <td colspan="6">
+        <div class="loading">
+          Loading jobs...
+        </div>
+      </td>
+    </tr>
+  `;
+
+
+  const {
+    data,
+    error
+  } = await db
+    .from("jobs")
+    .select("*")
+    .order("created_at", {
+      ascending:false
+    });
+
+
+  if(error){
+
+    jobsTableBody.innerHTML = `
+      <tr>
+        <td colspan="6">
+          <div class="empty-state">
+            Unable to load jobs.<br>
+            ${escapeHtml(error.message)}
+          </div>
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+
+  const jobs = data || [];
+
+  updateJobStats(jobs);
+
+
+  if(!jobs.length){
+
+    jobsTableBody.innerHTML = `
+      <tr>
+        <td colspan="6">
+          <div class="empty-state">
+            No jobs have been posted yet.
+          </div>
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+
+  jobsTableBody.innerHTML =
+    jobs.map(job => {
+
+      const status =
+        job.status || "published";
+
+      const created =
+        job.created_at
+          ? new Date(job.created_at).toLocaleDateString()
+          : "—";
+
+
+      return `
+        <tr>
+
+          <td>
+            <strong>
+              ${escapeHtml(job.title || "Untitled Job")}
+            </strong>
+          </td>
+
+          <td>
+            ${escapeHtml(job.location || "—")}
+          </td>
+
+          <td>
+            ${escapeHtml(job.type || "—")}
+          </td>
+
+          <td>
+            <span class="status ${status}">
+              ${escapeHtml(status)}
+            </span>
+          </td>
+
+          <td>
+            ${created}
+          </td>
+
+          <td>
+
+            <div class="row-actions">
+
+              <button
+                class="small-btn"
+                onclick="editJob('${job.id}')"
+              >
+                Edit
+              </button>
+
+              <button
+                class="small-btn"
+                onclick="changeJobStatus('${job.id}','${status}')"
+              >
+                ${status === "published"
+                  ? "Close"
+                  : "Publish"}
+              </button>
+
+              <button
+                class="small-btn delete"
+                onclick="deleteJob('${job.id}')"
+              >
+                Delete
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+      `;
+
+    }).join("");
+
+}
+
+
+/* =====================================================
+   JOB STATS
+   ===================================================== */
+
+function updateJobStats(jobs){
+
+  document.getElementById("totalJobs")
+    .textContent = jobs.length;
+
+  document.getElementById("publishedJobs")
+    .textContent =
+      jobs.filter(
+        j => j.status === "published"
+      ).length;
+
+  document.getElementById("openJobs")
+    .textContent =
+      jobs.filter(
+        j => j.status !== "closed"
+      ).length;
+
+}
+
+
+/* =====================================================
+   CREATE / UPDATE JOB
+   ===================================================== */
+
+document
+  .getElementById("jobForm")
+  .addEventListener("submit", async function(event){
+
+    event.preventDefault();
+
+
+    const jobId =
+      document.getElementById("jobId").value.trim();
+
+    const title =
+      document.getElementById("jobTitle").value.trim();
+
+    const location =
+      document.getElementById("jobLocation").value.trim();
+
+    const type =
+      document.getElementById("jobType").value;
+
+    const status =
+      document.getElementById("jobStatus").value;
+
+    const description =
+      document.getElementById("jobDescription").value.trim();
+
+
+    const saveButton =
+      document.getElementById("saveJobBtn");
+
+    saveButton.disabled = true;
+
+    saveButton.textContent =
+      "Saving...";
+
+
+    const payload = {
+
+      title,
+      location,
+      type,
+      status,
+      description
+
+    };
+
+
+    let result;
+
+
+    if(jobId){
+
+      result = await db
+        .from("jobs")
+        .update(payload)
+        .eq("id", jobId);
+
+    }else{
+
+      result = await db
+        .from("jobs")
+        .insert(payload);
+
+    }
+
+
+    if(result.error){
+
+      showMessage(
+        result.error.message,
+        "error"
+      );
+
+    }else{
+
+      showMessage(
+        jobId
+          ? "Job updated successfully."
+          : "Job created successfully.",
+        "success"
+      );
+
+      resetJobForm();
+
+      await loadJobs();
+
+    }
+
+
+    saveButton.disabled = false;
+
+    saveButton.textContent =
+      jobId
+        ? "Update Job"
+        : "+ Publish Job";
+
+  });
+
+
+/* =====================================================
+   EDIT JOB
+   ===================================================== */
+
+async function editJob(id){
+
+  const {
+    data: job,
+    error
+  } = await db
+    .from("jobs")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+
+  if(error){
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  document.getElementById("jobId").value =
+    job.id || "";
+
+  document.getElementById("jobTitle").value =
+    job.title || "";
+
+  document.getElementById("jobLocation").value =
+    job.location || "";
+
+  document.getElementById("jobType").value =
+    job.type || "";
+
+  document.getElementById("jobStatus").value =
+    job.status || "published";
+
+  document.getElementById("jobDescription").value =
+    job.description || "";
+
+
+  document.getElementById("jobFormTitle")
+    .textContent =
+      "Edit Job";
+
+  document.getElementById("saveJobBtn")
+    .textContent =
+      "Update Job";
+
+  document.getElementById("cancelEditBtn")
+    .style.display =
+      "inline-flex";
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =====================================================
+   RESET JOB FORM
+   ===================================================== */
+
+function resetJobForm(){
+
+  document.getElementById("jobForm").reset();
+
+  document.getElementById("jobId").value =
+    "";
+
+  document.getElementById("jobFormTitle")
+    .textContent =
+      "Post New Job";
+
+  document.getElementById("saveJobBtn")
+    .textContent =
+      "+ Publish Job";
+
+  document.getElementById("cancelEditBtn")
+    .style.display =
+      "none";
+
+}
+
+
+document
+  .getElementById("cancelEditBtn")
+  .addEventListener(
+    "click",
+    resetJobForm
+  );
+
+
+/* =====================================================
+   CHANGE STATUS
+   ===================================================== */
+
+async function changeJobStatus(id,currentStatus){
+
+  const newStatus =
+    currentStatus === "published"
+      ? "closed"
+      : "published";
+
+
+  const {
+    error
+  } = await db
+    .from("jobs")
+    .update({
+      status:newStatus
+    })
+    .eq("id",id);
+
+
+  if(error){
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    `Job ${newStatus}.`,
+    "success"
+  );
+
+  await loadJobs();
+
+}
+
+
+/* =====================================================
+   DELETE JOB
+   ===================================================== */
+
+async function deleteJob(id){
+
+  const confirmed =
+    confirm(
+      "Delete this job permanently?"
+    );
+
+
+  if(!confirmed){
+    return;
+  }
+
+
+  const {
+    error
+  } = await db
+    .from("jobs")
+    .delete()
+    .eq("id",id);
+
+
+  if(error){
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "Job deleted.",
+    "success"
+  );
+
+  await loadJobs();
+
+}
+
+
+/* =====================================================
+   LOAD APPLICATIONS
+   ===================================================== */
+
+async function loadApplications(){
+
+  applicationsContainer.innerHTML = `
+    <div class="loading">
+      Loading applications...
+    </div>
+  `;
+
+
+  const {
+    data,
+    error
+  } = await db
+    .from("applications")
+    .select("*")
+    .order("created_at", {
+      ascending:false
+    });
+
+
+  if(error){
+
+    applicationsContainer.innerHTML = `
+      <div class="empty-state">
+        Applications table is not connected yet.<br><br>
+        ${escapeHtml(error.message)}
+      </div>
+    `;
+
+    document.getElementById("totalApplications")
+      .textContent = "0";
+
+    return;
+  }
+
+
+  const applications =
+    data || [];
+
+
+  document.getElementById("totalApplications")
+    .textContent =
+      applications.length;
+
+
+  if(!applications.length){
+
+    applicationsContainer.innerHTML = `
+      <div class="empty-state">
+        No candidate applications yet.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  applicationsContainer.innerHTML =
+    `<div class="application-grid">` +
+
+    applications.map(app => {
+
+      const date =
+        app.created_at
+          ? new Date(app.created_at)
+              .toLocaleString()
+          : "—";
+
+
+      return `
+        <article class="application-card">
+
+          <h3>
+            ${escapeHtml(
+              app.full_name ||
+              app.name ||
+              "Candidate"
+            )}
+          </h3>
+
+          <div class="application-job">
+            ${escapeHtml(
+              app.applied_job ||
+              "General Profile"
+            )}
+          </div>
+
+          <div class="application-meta">
+
+            <div>
+              Email:
+              <strong>
+                ${escapeHtml(
+                  app.email || "—"
+                )}
+              </strong>
+            </div>
+
+            <div>
+              Phone:
+              <strong>
+                ${escapeHtml(
+                  app.phone ||
+                  app.contact ||
+                  "—"
+                )}
+              </strong>
+            </div>
+
+            <div>
+              Applied:
+              <strong>
+                ${date}
+              </strong>
+            </div>
+
+            <div>
+              Status:
+              <strong>
+                ${escapeHtml(
+                  app.status ||
+                  "New"
+                )}
+              </strong>
+            </div>
+
+          </div>
+
+          <div class="application-actions">
+
+            ${
+              app.resume_url
+                ? `
+                  <a
+                    class="small-btn"
+                    href="${escapeAttribute(app.resume_url)}"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    📄 Resume
+                  </a>
+                `
+                : ""
+            }
+
+          </div>
+
+        </article>
+      `;
+
+    }).join("") +
+
+    `</div>`;
+
+}
+
+
+/* =====================================================
+   TABS
+   ===================================================== */
+
+document
+  .querySelectorAll(".admin-tab")
+  .forEach(tab => {
+
+    tab.addEventListener(
+      "click",
+      async function(){
+
+        document
+          .querySelectorAll(".admin-tab")
+          .forEach(t =>
+            t.classList.remove("active")
+          );
+
+        document
+          .querySelectorAll(".admin-panel")
+          .forEach(panel =>
+            panel.classList.remove("active")
+          );
+
+
+        this.classList.add("active");
+
+
+        const panel =
+          document.getElementById(
+            this.dataset.panel
+          );
+
+        panel.classList.add("active");
+
+
+        if(
+          this.dataset.panel ===
+          "applicationsPanel"
+        ){
+
+          await loadApplications();
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =====================================================
+   REFRESH
+   ===================================================== */
+
+document
+  .getElementById("refreshBtn")
+  .addEventListener(
+    "click",
+    async function(){
+
+      await loadJobs();
+
+      await loadApplications();
+
+      showMessage(
+        "Dashboard refreshed.",
+        "success"
+      );
+
+    }
+  );
+
+
+/* =====================================================
+   LOGOUT
+   ===================================================== */
+
+document
+  .getElementById("logoutBtn")
+  .addEventListener(
+    "click",
+    async function(){
+
+      await db.auth.signOut();
+
+      window.location.href =
+        "admin-login.html";
+
+    }
+  );
+
+
+/* =====================================================
+   SECURITY HELPERS
+   ===================================================== */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+  return String(value ?? "")
+    .replace(/"/g,"&quot;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+
+}
+
+
+/* =====================================================
+   START
+   ===================================================== */
+
+(async function(){
+
+  const isAdmin =
+    await checkAdmin();
+
+  if(!isAdmin){
+    return;
+  }
+
+  await loadJobs();
+
 })();
-</script></body></html>
+
+</script>
+
+</body>
+</html>
