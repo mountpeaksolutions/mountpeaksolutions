@@ -1,6 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ================= MOBILE MENU ================= */
+  /* =========================================================
+     MOUNTPEAK GROUP — SUPABASE
+     ========================================================= */
+
+  const SUPABASE_URL = "https://yuarhxkntaojgkecwprp.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_WVtRsGn1bzVBRdKi8u3_Tg__ga54oRd";
+
+  let db = null;
+
+  if (window.supabase) {
+    const { createClient } = window.supabase;
+    db = createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+  }
+
+
+  /* =========================================================
+     MOBILE MENU
+     ========================================================= */
 
   const menuButton = document.getElementById("menuButton");
   const mainNav = document.getElementById("mainNav");
@@ -18,46 +39,45 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* ================= JOB SEARCH ================= */
+  /* =========================================================
+     JOB SEARCH
+     ========================================================= */
 
   const jobSearch = document.getElementById("jobSearch");
   const jobType = document.getElementById("jobType");
   const jobList = document.getElementById("jobList");
 
   function filterJobs() {
-
     if (!jobList) return;
 
-    const searchValue =
-      jobSearch?.value.trim().toLowerCase() || "";
+    const searchValue = jobSearch
+      ? jobSearch.value.toLowerCase().trim()
+      : "";
 
-    const typeValue =
-      jobType?.value.trim().toLowerCase() || "";
+    const typeValue = jobType
+      ? jobType.value.toLowerCase().trim()
+      : "";
 
-    const jobs = jobList.querySelectorAll("article");
+    const cards = jobList.querySelectorAll(".job-card");
 
-    jobs.forEach(job => {
-
-      const role =
-        job.getAttribute("data-role")?.toLowerCase() || "";
-
-      const jobText =
-        job.textContent.toLowerCase();
+    cards.forEach(card => {
+      const text = card.innerText.toLowerCase();
+      const type = (
+        card.dataset.type ||
+        card.querySelector(".job-meta")?.innerText ||
+        ""
+      ).toLowerCase();
 
       const matchesSearch =
-        !searchValue ||
-        role.includes(searchValue) ||
-        jobText.includes(searchValue);
+        !searchValue || text.includes(searchValue);
 
       const matchesType =
-        !typeValue ||
-        role.includes(typeValue);
+        !typeValue || type.includes(typeValue);
 
-      job.style.display =
+      card.style.display =
         matchesSearch && matchesType
           ? ""
           : "none";
-
     });
   }
 
@@ -70,27 +90,42 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* ================= JOB APPLICATION ================= */
+  /* =========================================================
+     JOB APPLICATION — SELECT JOB
+     ========================================================= */
 
   const selectedJob = document.getElementById("selectedJob");
 
-  document.querySelectorAll("[data-job]").forEach(link => {
+  document.querySelectorAll("[data-job]").forEach(button => {
 
-    link.addEventListener("click", () => {
+    button.addEventListener("click", () => {
 
-      const jobName =
-        link.getAttribute("data-job") || "";
+      const jobName = button.dataset.job || "";
 
       if (selectedJob) {
         selectedJob.value = jobName;
       }
+
+      setTimeout(() => {
+        const profileSection =
+          document.getElementById("profile");
+
+        if (profileSection) {
+          profileSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }
+      }, 100);
 
     });
 
   });
 
 
-  /* ================= SMOOTH SCROLL ================= */
+  /* =========================================================
+     SMOOTH SCROLL
+     ========================================================= */
 
   document.querySelectorAll('a[href^="#"]').forEach(link => {
 
@@ -99,16 +134,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const targetId =
         link.getAttribute("href");
 
-      if (!targetId || targetId === "#") {
-        return;
-      }
+      if (!targetId || targetId === "#") return;
 
       const target =
         document.querySelector(targetId);
 
-      if (!target) {
-        return;
-      }
+      if (!target) return;
 
       event.preventDefault();
 
@@ -122,7 +153,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  /* ================= AI NAVIGATION ================= */
+  /* =========================================================
+     AI NAVIGATION
+     ========================================================= */
 
   const aiToggle =
     document.getElementById("aiToggle");
@@ -133,44 +166,29 @@ document.addEventListener("DOMContentLoaded", () => {
   if (aiToggle && aiPanel) {
 
     aiToggle.addEventListener("click", () => {
-
-      const isHidden =
-        aiPanel.hasAttribute("hidden");
-
-      if (isHidden) {
-        aiPanel.removeAttribute("hidden");
-      } else {
-        aiPanel.setAttribute("hidden", "");
-      }
-
+      aiPanel.classList.toggle("open");
     });
 
   }
-
-
-  /* ================= AI NAVIGATION LINKS ================= */
 
   document.querySelectorAll("[data-go]").forEach(button => {
 
     button.addEventListener("click", () => {
 
       const targetId =
-        button.getAttribute("data-go");
+        button.dataset.go;
 
       const target =
-        document.querySelector(targetId);
+        document.getElementById(targetId);
 
       if (target) {
-
         target.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
+          behavior: "smooth"
         });
-
       }
 
       if (aiPanel) {
-        aiPanel.setAttribute("hidden", "");
+        aiPanel.classList.remove("open");
       }
 
     });
@@ -178,7 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  /* ================= AI CHAT ================= */
+  /* =========================================================
+     AI CHAT
+     ========================================================= */
 
   const chatToggle =
     document.getElementById("chatToggle");
@@ -199,32 +219,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("chatMessages");
 
 
-  function openChat() {
-
-    if (!chatBox) return;
-
-    chatBox.removeAttribute("hidden");
-
-  }
-
-
-  function closeChat() {
-
-    if (!chatBox) return;
-
-    chatBox.setAttribute("hidden", "");
-
-  }
-
-
-  function addUserMessage(message) {
+  function addChatMessage(message, type = "bot") {
 
     if (!chatMessages) return;
 
     const div =
       document.createElement("div");
 
-    div.className = "user-msg";
+    div.className =
+      `chat-message ${type}`;
 
     div.textContent = message;
 
@@ -232,296 +235,422 @@ document.addEventListener("DOMContentLoaded", () => {
 
     chatMessages.scrollTop =
       chatMessages.scrollHeight;
-
   }
 
 
-  function addBotMessage(message) {
+  function getAIResponse(message) {
 
-    if (!chatMessages) return;
+    const text =
+      message.toLowerCase();
 
-    const div =
-      document.createElement("div");
+    if (
+      text.includes("job") ||
+      text.includes("jobs") ||
+      text.includes("vacancy") ||
+      text.includes("career")
+    ) {
+      return "You can explore current opportunities in the Jobs section and apply directly through MountPeak Group.";
+    }
 
-    div.className = "bot-msg";
+    if (
+      text.includes("resume") ||
+      text.includes("profile") ||
+      text.includes("apply")
+    ) {
+      return "To apply, choose a job and complete the candidate profile form with your resume.";
+    }
 
-    div.textContent = message;
+    if (
+      text.includes("join") ||
+      text.includes("enroll")
+    ) {
+      return "You can join MountPeak Group by completing the candidate profile form. There is no payment required on the website.";
+    }
 
-    chatMessages.appendChild(div);
+    if (
+      text.includes("service") ||
+      text.includes("employer") ||
+      text.includes("business")
+    ) {
+      return "MountPeak Group provides technology, talent and business solutions for candidates and employers.";
+    }
 
-    chatMessages.scrollTop =
-      chatMessages.scrollHeight;
+    if (
+      text.includes("contact") ||
+      text.includes("email")
+    ) {
+      return "You can contact MountPeak Group at hr@mountpeakgroup.com.";
+    }
 
+    return "Welcome to MountPeak Group. I can help you with jobs, applications, candidate profiles, services and contact information.";
   }
 
 
-  function getAIResponse(question) {
+  function sendChatMessage() {
 
-    const q =
-      question.toLowerCase().trim();
+    if (!chatInput) return;
 
+    const message =
+      chatInput.value.trim();
 
-    if (
-      q.includes("job") ||
-      q.includes("jobs") ||
-      q.includes("vacancy") ||
-      q.includes("opening")
-    ) {
+    if (!message) return;
 
-      return "You can view current opportunities in the Jobs section. Select a position and click Apply to submit your profile and resume.";
+    addChatMessage(message, "user");
 
-    }
-
-
-    if (
-      q.includes("profile") ||
-      q.includes("resume") ||
-      q.includes("cv")
-    ) {
-
-      return "You can submit your professional profile from the Submit Your Profile section. Complete the form and upload your PDF, DOC or DOCX resume.";
-
-    }
-
-
-    if (
-      q.includes("service") ||
-      q.includes("services")
-    ) {
-
-      return "MountPeak Group provides IT Solutions, Cloud & Digital services, Software Solutions, Technology Consulting, Workforce Solutions and Professional Services.";
-
-    }
-
-
-    if (
-      q.includes("join") ||
-      q.includes("enroll") ||
-      q.includes("candidate")
-    ) {
-
-      return "To join MountPeak Group, complete the candidate profile form and submit your professional details and resume. Our team can then review your information.";
-
-    }
-
-
-    if (
-      q.includes("employer") ||
-      q.includes("business") ||
-      q.includes("hire")
-    ) {
-
-      return "Employers can contact MountPeak Group to discuss technology, talent, workforce and business requirements.";
-
-    }
-
-
-    if (
-      q.includes("contact") ||
-      q.includes("email")
-    ) {
-
-      return "You can contact the MountPeak Group team at hr@mountpeakgroup.com.";
-
-    }
-
-
-    return "I can help you navigate MountPeak Group. You can ask me about jobs, submitting your profile, services, employers or contacting our team.";
-
-  }
-
-
-  function sendChatMessage(message) {
-
-    if (!message || !message.trim()) {
-      return;
-    }
-
-    const cleanMessage =
-      message.trim();
-
-    addUserMessage(cleanMessage);
-
-    const response =
-      getAIResponse(cleanMessage);
+    chatInput.value = "";
 
     setTimeout(() => {
-      addBotMessage(response);
-    }, 300);
+      addChatMessage(
+        getAIResponse(message),
+        "bot"
+      );
+    }, 400);
 
   }
 
 
-  if (chatToggle) {
-    chatToggle.addEventListener("click", openChat);
-  }
+  if (chatToggle && chatBox) {
 
-
-  if (chatClose) {
-    chatClose.addEventListener("click", closeChat);
-  }
-
-
-  if (chatSend && chatInput) {
-
-    chatSend.addEventListener("click", () => {
-
-      const message =
-        chatInput.value;
-
-      sendChatMessage(message);
-
-      chatInput.value = "";
-
+    chatToggle.addEventListener("click", () => {
+      chatBox.classList.toggle("open");
     });
 
+  }
 
-    chatInput.addEventListener("keydown", event => {
+  if (chatClose && chatBox) {
 
-      if (event.key === "Enter") {
+    chatClose.addEventListener("click", () => {
+      chatBox.classList.remove("open");
+    });
 
-        event.preventDefault();
+  }
 
-        const message =
-          chatInput.value;
+  if (chatSend) {
+    chatSend.addEventListener(
+      "click",
+      sendChatMessage
+    );
+  }
 
-        sendChatMessage(message);
+  if (chatInput) {
 
-        chatInput.value = "";
+    chatInput.addEventListener(
+      "keydown",
+      event => {
+
+        if (event.key === "Enter") {
+          event.preventDefault();
+          sendChatMessage();
+        }
 
       }
-
-    });
+    );
 
   }
 
 
-  /* ================= CHAT SUGGESTIONS ================= */
-
-  document.querySelectorAll("[data-chat]").forEach(button => {
-
-    button.addEventListener("click", () => {
-
-      const message =
-        button.getAttribute("data-chat");
-
-      openChat();
-
-      sendChatMessage(message);
-
-    });
-
-  });
-
-
-  /* ================= CANDIDATE FORM ================= */
+  /* =========================================================
+     CANDIDATE APPLICATION
+     ========================================================= */
 
   const candidateForm =
     document.getElementById("candidateForm");
 
   if (candidateForm) {
 
-    candidateForm.addEventListener("submit", () => {
+    candidateForm.addEventListener(
+      "submit",
+      async event => {
 
-      const submitButton =
-        candidateForm.querySelector(
-          'button[type="submit"]'
-        );
+        event.preventDefault();
 
-      if (submitButton) {
+        if (!db) {
+          alert(
+            "Database connection is unavailable. Please try again."
+          );
+          return;
+        }
 
-        submitButton.textContent =
-          "Submitting Profile...";
 
-        submitButton.disabled = true;
+        const submitButton =
+          candidateForm.querySelector(
+            'button[type="submit"], input[type="submit"]'
+          );
+
+        const originalText =
+          submitButton
+            ? submitButton.textContent
+            : "";
+
+
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.textContent =
+            "Submitting Profile...";
+        }
+
+
+        try {
+
+          const formData =
+            new FormData(candidateForm);
+
+
+          /* ---------- BASIC DETAILS ---------- */
+
+          const fullName =
+            formData.get("Full Name") ||
+            formData.get("full_name") ||
+            formData.get("name") ||
+            "";
+
+          const email =
+            formData.get("Email") ||
+            formData.get("email") ||
+            "";
+
+          const phone =
+            formData.get("Phone") ||
+            formData.get("phone") ||
+            formData.get("Contact") ||
+            "";
+
+          const alternativePhone =
+            formData.get("Alternative Phone") ||
+            formData.get("alternative_phone") ||
+            "";
+
+          const address =
+            formData.get("Address") ||
+            formData.get("address") ||
+            "";
+
+          const appliedJob =
+            formData.get("Applied Job") ||
+            selectedJob?.value ||
+            "";
+
+          const applicationType =
+            formData.get("Application Type") ||
+            "General Candidate Profile";
+
+
+          /* ---------- RESUME ---------- */
+
+          const resume =
+            formData.get("Resume");
+
+
+          let resumePath = "";
+          let resumeUrl = "";
+
+
+          if (
+            resume &&
+            resume instanceof File &&
+            resume.size > 0
+          ) {
+
+            const safeName =
+              resume.name
+                .replace(/[^a-zA-Z0-9._-]/g, "_");
+
+            const timestamp =
+              Date.now();
+
+            const random =
+              Math.random()
+                .toString(36)
+                .substring(2, 8);
+
+            resumePath =
+              `${timestamp}_${random}_${safeName}`;
+
+
+            const uploadResult =
+              await db.storage
+                .from("Resume")
+                .upload(
+                  resumePath,
+                  resume,
+                  {
+                    cacheControl: "3600",
+                    upsert: false,
+                    contentType:
+                      resume.type ||
+                      "application/octet-stream"
+                  }
+                );
+
+
+            if (uploadResult.error) {
+              throw uploadResult.error;
+            }
+
+
+            /*
+              Bucket is private.
+              Store the path in database.
+              Admin dashboard can later create
+              secure signed download URLs.
+            */
+
+            resumeUrl = resumePath;
+          }
+
+
+          /* ---------- DATABASE RECORD ---------- */
+
+          const applicationRecord = {
+
+            full_name: fullName,
+
+            email: email,
+
+            phone: phone,
+
+            alternative_phone:
+              alternativePhone,
+
+            address: address,
+
+            applied_job:
+              appliedJob,
+
+            application_type:
+              applicationType,
+
+            resume_url:
+              resumeUrl,
+
+            resume_path:
+              resumePath,
+
+            status:
+              "New",
+
+            notes:
+              "",
+
+            created_at:
+              new Date().toISOString()
+
+          };
+
+
+          const {
+            error: insertError
+          } = await db
+            .from("applications")
+            .insert([
+              applicationRecord
+            ]);
+
+
+          if (insertError) {
+            throw insertError;
+          }
+
+
+          /* ---------- SUCCESS ---------- */
+
+          alert(
+            "Application submitted successfully! Our team will review your profile."
+          );
+
+
+          candidateForm.reset();
+
+
+          if (selectedJob) {
+            selectedJob.value = "";
+          }
+
+
+        } catch (error) {
+
+          console.error(
+            "Application submission error:",
+            error
+          );
+
+          alert(
+            "Unable to submit your application right now. Please try again."
+          );
+
+        } finally {
+
+          if (submitButton) {
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+              originalText ||
+              "Submit Profile";
+          }
+
+        }
 
       }
-
-    });
+    );
 
   }
 
 
-  /* ================= CONTACT FORM ================= */
+  /* =========================================================
+     CONTACT FORM
+     ========================================================= */
 
   document.querySelectorAll(
-    'form[action*="formsubmit.co"]'
+    ".contact form"
   ).forEach(form => {
 
-    if (form.id === "candidateForm") {
-      return;
-    }
+    form.addEventListener(
+      "submit",
+      () => {
 
-    form.addEventListener("submit", () => {
+        const button =
+          form.querySelector(
+            'button[type="submit"], input[type="submit"]'
+          );
 
-      const submitButton =
-        form.querySelector(
-          'button[type="submit"]'
-        );
-
-      if (submitButton) {
-
-        submitButton.textContent =
-          "Sending...";
-
-        submitButton.disabled = true;
+        if (button) {
+          button.disabled = true;
+          button.textContent =
+            "Sending...";
+        }
 
       }
-
-    });
-
-  });
-
-
-  /* ================= JOB APPLY BUTTON ================= */
-
-  document.querySelectorAll(
-    '#jobList [data-job]'
-  ).forEach(link => {
-
-    link.addEventListener("click", () => {
-
-      const jobName =
-        link.getAttribute("data-job");
-
-      if (selectedJob && jobName) {
-        selectedJob.value = jobName;
-      }
-
-    });
-
-  });
-
-
-  /* ================= CLOSE AI PANELS ================= */
-
-  document.addEventListener("click", event => {
-
-    if (
-      aiPanel &&
-      aiToggle &&
-      !aiPanel.contains(event.target) &&
-      !aiToggle.contains(event.target)
-    ) {
-
-      aiPanel.setAttribute("hidden", "");
-
-    }
-
-  });
-
-
-  /* ================= YEAR ================= */
-
-  const yearElements =
-    document.querySelectorAll(
-      "[data-current-year]"
     );
 
-  yearElements.forEach(element => {
+  });
 
-    element.textContent =
-      new Date().getFullYear();
+
+  /* =========================================================
+     CHAT SUGGESTIONS
+     ========================================================= */
+
+  document.querySelectorAll(
+    "[data-chat]"
+  ).forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        const message =
+          button.dataset.chat;
+
+        if (!message) return;
+
+        if (chatInput) {
+          chatInput.value =
+            message;
+        }
+
+        sendChatMessage();
+
+      }
+    );
 
   });
 
